@@ -12,4 +12,9 @@ class EventMemberCompanion extends Model
     use SoftDeletes;
 
     protected $table = "event_member_companions";
+
+    public function eventMember()
+    {
+        return $this->belongsTo(eventMember::class);
+    }
 }

@@ -12,4 +12,19 @@ class EventMember extends Model
     use SoftDeletes;
 
     protected $table = "event_members";
+
+    public function member()
+    {
+        return $this->hasOne(Member::class);
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function companions()
+    {
+        return $this->hasMany(EventMemberCompanion::class);
+    }
 }

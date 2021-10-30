@@ -12,4 +12,9 @@ class Event extends Model
     use SoftDeletes;
 
     protected $table = "events";
+
+    public function eventMembers()
+    {
+        return $this->hasMany(EventMember::class);
+    }
 }
