@@ -10,4 +10,6 @@ class Config extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = "configs";
 }

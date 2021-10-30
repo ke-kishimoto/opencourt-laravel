@@ -10,4 +10,6 @@ class TroubleReport extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = "trouble_reports";
 }

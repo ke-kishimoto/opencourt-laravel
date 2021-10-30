@@ -10,4 +10,6 @@ class Notice extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = "notices";
 }

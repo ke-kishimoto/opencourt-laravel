@@ -10,4 +10,6 @@ class EventMember extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = "event_members";
 }

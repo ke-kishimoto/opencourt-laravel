@@ -10,4 +10,6 @@ class MemberCategory extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $table = "member_categories";
 }
