@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginLogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index', ['title' => 'カレンダー']);
 });
+
+Route::get('/login', [LoginLogoutController::class, 'login']);
+// Route::get('/login', function() {
+//     return view('login', ['title' => 'ログイン']);
+// });

@@ -4,7 +4,7 @@ Vue.component('vue-header', {
             user:{},
             logind: false,
             admin: false,
-            systemTitle: '',
+            systemTitle: 'opencourt',
             bgColor: 'white',
         }
     },
@@ -62,7 +62,7 @@ Vue.component('vue-header', {
                     <li v-if="logind"><a class="drawer-menu-item" href="/user/participatingEventList">参加イベント一覧</a></li>
                     <li v-if="logind"><a class="drawer-menu-item" href="/participant/eventBatchRegist">イベント一括参加</a></li>
                     <li v-if="!logind"><a class="drawer-menu-item" href="/user/signup">新規登録</a></li>
-                    <li v-if="!logind"><a class="drawer-menu-item" href="/user/signin">ログイン</a></li>
+                    <li v-if="!logind"><a class="drawer-menu-item" href="login">ログイン</a></li>
                     <li><a class="drawer-menu-item" href="/help/inquiry">お問い合わせ</a></li>
                     <li><a class="drawer-menu-item" href="/help/troubleReport">障害報告・要望</a></li>
                     <li v-if="logind"><a class="drawer-menu-item" v-bind:href="'/user/edit?id=' + user.id">アカウント情報</a></li>
@@ -80,7 +80,7 @@ Vue.component('vue-header', {
                     <span v-if="logind">{{ user.name }}さん</span>
                     <span class="participant-header-menu">
                         <a v-if="!logind" class="btn btn-sm btn-outline-dark" href="/user/signup" role="button" style="margin-right:5px;">新規登録</a>
-                        <a v-if="!logind" class="btn btn-sm btn-outline-dark" href="/user/signin" role="button">ログイン</a>
+                        <a v-if="!logind" class="btn btn-sm btn-outline-dark" href="login" role="button">ログイン</a>
                         <a v-if="logind" class="btn btn-sm btn-outline-dark" v-bind:href="'/user/edit?id=' + user.id" role="button" style="margin-right:5px;">アカウント情報</a>
                         <a v-if="logind" class="btn btn-sm btn-outline-dark" href="/user/signout" role="button">ログアウト</a>
                     </span>
