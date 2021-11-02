@@ -1,0 +1,367 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+@import url(https://use.fontawesome.com/releases/v5.6.1/css/all.css);
+html,body{
+    font-family: 'DIN Next Light', 'Noto Sans JP', sans-serif;
+    font-size: 100%;
+}
+
+/****** ここからカレンダー用 ******/
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+table th,
+table td {
+    border: 1px solid #CCC;
+}
+table td a {
+    display: flex;
+}
+table tr {
+    height: 75px;
+}
+
+table th {
+    text-align: center;
+}
+table .blank {
+    background-color: #EEE;
+}
+table td .day {
+    height: 80px;
+    overflow-y: scroll;
+    font-size: 12px;
+}
+table td{
+    padding: 3px 5px;
+}
+table tr.weekTit{
+    height: 40px;
+    color: #555;
+}
+
+.day a.event {
+    color: white;
+    border: 1px solid;
+    border-radius: 10%;
+    /* height: 25px; */
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.guide {
+    color: white;
+    border: 1px solid;
+    border-radius: 10%;
+    font-size: 12px;
+    padding: 3px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 2px;
+    text-decoration: none;
+    transition: .2s;
+}
+
+
+.availability-OK {
+    background-color: #00CC99;
+}
+.availability-OK:hover {
+    background-color: #00cc99c9;
+}
+.availability-COUTION {
+    background-color: #FFCC33;
+}
+.availability-COUTION:hover {
+    background-color: #ffcc33c5;
+}
+.availability-NG {
+    background-color: #FF367F;
+}
+.availability-NG:hover {
+    background-color: #ff3680c5;
+}
+.event-apply-Yes {
+    background-color: #007bff;
+}
+.event-apply-Yes-cancel {
+    background-color: #DE5021;
+}
+
+.sunday {
+    background-color: #FFD5EC;
+}
+.sunday .day a.event {
+    border-color: #FFD5EC;
+}
+
+.saturday {
+    background-color: #D9E5FF;
+}
+.saturday .day a.event {
+    border-color: #D9E5FF;
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.link-add {
+    margin-right: 5px;
+}
+.link, .nolink {
+    margin-left: 3px;
+    text-align: center;
+}
+
+.month,.year{
+    display: flex;
+    justify-content: space-between;
+}
+
+.month a, .month p{
+    width: 400px;
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(109, 109, 109);
+    font-size: 25px;
+    font-weight: bold;
+    transition: .2s;
+    text-align: center;
+}
+.year a,.year p{
+    width: 50%;
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(109, 109, 109);
+    font-size: 25px;
+    font-weight: bold;
+    transition: .2s;
+    text-align: center;
+    margin-bottom: 0px;
+}
+.month a:hover,.year a:hover{
+    opacity: .5;
+}
+.month i{
+    line-height: 36px;
+}
+
+.today {
+    color: white;
+    background: #007bff;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    text-align: center;
+    position: relative;
+}
+ /* カレンダーのスクロールバー非表示 */
+.day {
+    -ms-overflow-style: none;    /* IE, Edge 対応 */
+    scrollbar-width: none;       /* Firefox 対応 */
+}
+.day::-webkit-scrollbar {
+    display:none;   /* Chrome, Safari 対応 */
+}
+a.link, .nolink{
+    font-size: 15px;
+    font-weight: 600;
+    height: 22px;
+    width: 22px;
+    display:block
+}
+.nolink{
+    opacity: 0.6;
+}
+/****** ここまでカレンダー ******/
+
+.hidden {
+    display: none;
+}
+/* ロゴ */
+.logo {
+    font-size: 24px;
+    text-decoration: none;
+    transition: 0.3s;
+    color: black;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.logo:hover {
+    text-decoration: none;
+    color: rgb(255, 168, 68);
+}
+
+.duplication {
+    background-color: yellow;
+}
+/****** ヘッダー ******/
+.system-header {
+    display: flex;
+    height: 55px;
+    line-height: 55px;
+}
+
+.dummy {
+    width: fit-content;
+    color: transparent;
+}
+
+.system-name {
+    width: max-content;
+    margin: 0 auto;
+}
+
+.user-name > span:first-child{
+    vertical-align: -1%;
+    margin-right: 5px;
+}
+
+.sales-head {
+    display: flex;
+    justify-content: space-between;
+}
+.sales-head a, .sales-head p {
+    width: 400px;
+    display: inline-block;
+    text-decoration: none;
+    color: rgb(109, 109, 109);
+    font-size: 25px;
+    font-weight: bold;
+    transition: .2s;
+    text-align: center;
+}
+
+@media screen and (max-width:480px) { 
+    .participant-header-menu {
+        display: none;
+    }
+    .logo {
+        font-size: 15px;
+        white-space: nowrap;
+    }
+    .user-name {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    a.MonthLink {
+        font-size: 18px;
+        white-space: nowrap;
+    }
+    .day a.event {
+        font-size: 12px;
+        height: auto;
+        letter-spacing: 0em;
+    }
+    a.sales-link {
+        font-size: 15px;
+    }
+    .sales-head a, .sales-head p  {
+        font-size: 15px;
+    }
+}
+
+/****** ここまでヘッダー ******/
+
+/* 新規登録 */
+.explain-box {
+    position: relative;
+    margin: 39px 0 2em;
+    padding: 0.5em 1em;
+    border: solid 3px #62c1ce;
+}
+.explain-box .explain-tit {
+    position: absolute;
+    display: inline-block;
+    top: -27px;
+    left: -3px;
+    padding: 0 9px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 17px;
+    background: #62c1ce;
+    color: #ffffff;
+    border-radius: 5px 5px 0 0;
+}
+.explain-box p {
+    margin: 0; 
+    padding: 0;
+}
+
+header {
+    /*オレンジ*/
+    background-color: #DE5021; 
+    /* background-color: #ffc0cb; */
+    /* background-color: white; */
+}
+
+.bg-color-white {
+    background-color: white;
+}
+
+.bg-color-orange {
+    background-color: #DE5021;
+}
+
+.event-end {
+    text-decoration: none;
+    color: red;
+}
+
+.eventList-checkbox {
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row-reverse;
+    align-items: center;
+}
+.eventList-item {
+    width:fit-content;    
+}
+
+h1 {
+    font-size: large;
+    margin: 10px 0;
+}
+
+footer {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+footer a{
+    color: black;
+    text-decoration: underline;
+    margin: 0 20px;
+}
+
+.form-price{
+    width:100px;
+    display:inline;
+}
+
+.sales-event-title{
+    width: 400px;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+/* .login {
+    display: flex;
+} */
