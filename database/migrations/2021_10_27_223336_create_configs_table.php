@@ -17,7 +17,7 @@ class CreateConfigsTable extends Migration
             $table->bigIncrements('id');
             $table->string('system_title');
             $table->string('bg_color');
-            $table->string('logo_img_path');
+            $table->string('logo_img_path')->nullable();
             $table->string('waiting_flg_auto_update');
             $table->timestamps();
             $table->softDeletes();

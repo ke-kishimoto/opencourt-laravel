@@ -16,16 +16,17 @@ class CreateMembersTable extends Migration
         Schema::create('members', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('role_level');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('name');
-            $table->string('tel');
-            $table->string('password');
-            $table->integer('gender');
-            $table->integer('category_id');
-            $table->string('remark');
-            $table->string('line_id');
-            $table->string('line_access_token');
-            $table->string('line_refresh_token');
+            $table->string('tel')->nullable();
+            $table->string('password')->nullable();
+            $table->integer('gender')->nullable();
+            $table->integer('category_id')->nullable();
+            $table->string('remark')->nullable();
+            $table->string('line_id')->nullable();
+            $table->string('line_access_token')->nullable();
+            $table->string('line_refresh_token')->nullable();
+            $table->string('remember_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

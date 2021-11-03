@@ -17,11 +17,11 @@ class CreateEventMembersTable extends Migration
             $table->bigIncrements('id');
             $table->integer('event_id');
             $table->integer('member_id');
-            $table->string('remark');
+            $table->string('remark')->nullable();
             $table->integer('status');
             $table->integer('attendance');
-            $table->integer('amount');
-            $table->string('amount_remark');
+            $table->integer('amount')->nullable();
+            $table->string('amount_remark')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

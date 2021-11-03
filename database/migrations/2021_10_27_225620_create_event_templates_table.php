@@ -18,12 +18,12 @@ class CreateEventTemplatesTable extends Migration
             $table->string('title');
             $table->string('short_title');
             $table->string('place');
-            $table->string('detail');
-            $table->integer('price1');
-            $table->integer('price2');
-            $table->integer('price3');
-            $table->integer('price4');
-            $table->integer('price5');
+            $table->string('detail')->nullable();
+            $table->integer('price1')->nullable();
+            $table->integer('price2')->nullable();
+            $table->integer('price3')->nullable();
+            $table->integer('price4')->nullable();
+            $table->integer('price5')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
