@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,5 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [LoginLogoutController::class, 'login']);
-// Route::get('/login', function() {
-//     return view('login', ['title' => 'ログイン']);
-// });
+Route::get('/newAccount', [MemberController::class, 'newAccount']);
+

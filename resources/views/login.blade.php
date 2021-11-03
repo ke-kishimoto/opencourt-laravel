@@ -33,13 +33,12 @@
         </div> -->
     </div>
 
-    <vue-footer></vue-footer>
+    <x-footer/>
 
 </div>
 <script src="js/common.js"></script>
-<script src="js/vue.js"></script>
+<script src="js/vue.min.js"></script>
 <script src="js/header.js"></script>
-<script src="js/footer.js"></script>
 <script>
     'use strict'
     const vue = new Vue({
