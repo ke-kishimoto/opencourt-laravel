@@ -15,10 +15,17 @@ use App\Http\Controllers\MemberController;
 |
 */
 
+Route::middleware('auth:sanctum')->group(function(){ 
+    Route::get('/index', function () {
+        return view('index', ['title' => 'カレンダー']);
+    });
+});
+
 Route::get('/', function () {
     return view('index', ['title' => 'カレンダー']);
 });
 
 Route::get('/login', [LoginLogoutController::class, 'login']);
+Route::post('/loginCheck', [LoginLogoutController::class, 'loginCheck']);
 Route::get('/newAccount', [MemberController::class, 'newAccount']);
 

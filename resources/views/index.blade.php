@@ -3,7 +3,8 @@
 <x-head :title="$title" />
 <body class="container drawer drawer--left">
 <div id="app" v-cloak>
-    <vue-header></vue-header>
+    
+    <x-header/>
 
     <table>
         <tr>
@@ -67,6 +68,7 @@
 <script src="js/common.js"></script>
 <script src="js/vue.min.js"></script>
 <script src="js/header.js"></script>
+
 <script>
     'use strict'
     const app = new Vue({
