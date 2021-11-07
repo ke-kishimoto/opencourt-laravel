@@ -9,7 +9,7 @@
         <ul class="drawer-menu">
             @if(session('user') && session('user')->role_level < 3)
             <li ><a class="drawer-brand" href="#">管理者メニュー</a></li>
-            <li ><a class="drawer-menu-item" href="/admin/config">システム設定</a></li>
+            <li ><a class="drawer-menu-item" href="config/1">システム設定</a></li>
             <li ><a class="drawer-menu-item" href="/admin/eventTemplate">テンプレート設定</a></li>
             <li ><a class="drawer-menu-item" href="/admin/userList">ユーザーリスト</a></li>
             <li ><a class="drawer-menu-item" href="/admin/inquiryList">問い合わせ管理</a></li>
@@ -23,7 +23,7 @@
             <li ><a class="drawer-menu-item" href="/participant/eventBatchRegist">イベント一括参加</a></li>
             <li><a class="drawer-menu-item" href="/help/inquiry">お問い合わせ</a></li>
             <li><a class="drawer-menu-item" href="/help/troubleReport">障害報告・要望</a></li>
-            <li ><a class="drawer-menu-item" v-bind:href="'/user/edit?id=' + user.id">アカウント情報</a></li>
+            <li ><a class="drawer-menu-item" href="">アカウント情報</a></li>
             <li ><a class="drawer-menu-item" href="/user/signout">ログアウト</a></li>
             @else
             <li ><a class="drawer-menu-item" href="newAccount">新規登録</a></li>

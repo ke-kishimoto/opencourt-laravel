@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +24,17 @@ use App\Http\Controllers\MemberController;
 
 Route::get('/', function () {
     return view('index', ['title' => 'カレンダー']);
-});
+})->name('index');
 
 Route::get('/login', [LoginLogoutController::class, 'login']);
 Route::get('/logout', [LoginLogoutController::class, 'logout']);
 Route::post('/loginCheck', [LoginLogoutController::class, 'loginCheck']);
 Route::get('/newAccount', [MemberController::class, 'newAccount']);
+Route::get('/privacyPolicy', function() {
+    return view('privacyPolicy', ['title' => 'プライバシーポリシー']);
+});
+Route::get('/config/{id}', [ConfigController::class, 'show']);
+Route::patch('/config/{id}/update', [ConfigController::class, 'update'])
+    ->name('config.update');
+
 
