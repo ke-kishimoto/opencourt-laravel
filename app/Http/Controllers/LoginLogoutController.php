@@ -43,4 +43,10 @@ class LoginLogoutController extends Controller
             return response($data, 400);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        return view('index', ['title' => 'カレンダー']);
+    }
 }

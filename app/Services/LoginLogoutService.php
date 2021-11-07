@@ -21,9 +21,4 @@ class LoginLogoutService
         }
         return $member;
     }
-
-    public function logout()
-    {
-        
-    }
 }
