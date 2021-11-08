@@ -15,9 +15,11 @@ class CreateEventTemplatesTable extends Migration
     {
         Schema::create('event_templates', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('template_name');
             $table->string('title');
             $table->string('short_title');
             $table->string('place');
+            $table->integer('limit_number');
             $table->string('detail')->nullable();
             $table->integer('price1')->nullable();
             $table->integer('price2')->nullable();

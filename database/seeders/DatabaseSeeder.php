@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EventTemplate;
 use App\Models\Member;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ConfigSeer::class,
             MemberCategorySeeder::class,
             MemberSeeder::class,
+            EventTemplateSeeder::class,
         ]);
     }
 }
