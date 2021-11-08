@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\EventTemplateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,8 @@ Route::get('/privacyPolicy', function() {
 Route::get('/config/{id}', [ConfigController::class, 'show']);
 Route::patch('/config/{id}/update', [ConfigController::class, 'update'])
     ->name('config.update');
-
+Route::get('/eventTemplate', [EventTemplateController::class, 'index'])
+    ->name('eventTemplate');
+Route::post('/eventTemplate/create', [EventTemplateController::class, 'index'])
+    ->name('eventTemplate.create');
 

@@ -11,5 +11,5 @@ class EventTemplate extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "event_teplates";
+    protected $table = "event_templates";
 }
