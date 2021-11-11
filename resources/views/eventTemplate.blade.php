@@ -39,8 +39,10 @@
         <p>
             参加費<br>
             <label>社会人　<input type="text" type="number" class="form-control form-price" name="price1" v-model="localData.price1" required value="0">円</label><br>
-            <label>大学・専門　<input type="text" type="number" class="form-control form-price" name="price2" v-model="localData.price2"  required value="0">円</label><br>
-            <label>高校　<input type="text" type="number" class="form-control form-price" name="price3" v-model="localData.price3" required value="0">円</label>
+            <label>大学　<input type="text" type="number" class="form-control form-price" name="price2" v-model="localData.price2"  required value="0">円</label><br>
+            <label>高校　<input type="text" type="number" class="form-control form-price" name="price3" v-model="localData.price3" required value="0">円</label><br>
+            <label>その他1 <input type="text" type="number" class="form-control form-price" name="price4" v-model="localData.price4" required value="0">円</label><br>
+            <label>その他2　<input type="text" type="number" class="form-control form-price" name="price5" v-model="localData.price5" required value="0">円</label><br>
         </p>
         <p>
             <button class="btn btn-primary" type="submit" >登録</button>
@@ -122,6 +124,8 @@
                 params.append('price1', this.price1 ?? 0);
                 params.append('price2', this.price2 ?? 0);
                 params.append('price3', this.price3 ?? 0);
+                params.append('price4', this.price3 ?? 0);
+                params.append('price5', this.price3 ?? 0);
                 fetch('/api/data/updateRecord', {
                     method: 'post',
                     body: params

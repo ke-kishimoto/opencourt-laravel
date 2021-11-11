@@ -39,6 +39,6 @@ Route::patch('/config/{id}/update', [ConfigController::class, 'update'])
     ->name('config.update');
 Route::get('/eventTemplate', [EventTemplateController::class, 'index'])
     ->name('eventTemplate');
-Route::post('/eventTemplate/create', [EventTemplateController::class, 'index'])
+Route::post('/eventTemplate/create', [EventTemplateController::class, 'create'])
     ->name('eventTemplate.create');
 

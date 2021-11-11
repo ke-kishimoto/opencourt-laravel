@@ -31,6 +31,23 @@ class EventTemplateController extends Controller
 
     public function create(Request $request)
     {
+        if($request->isnew) {
+            $eventTemplate = new EventTemplate();
+        } else {
+            $eventTemplate = EventTemplate::find($request->select_id);
+        }
+        $eventTemplate->template_name = $request->template_name;
+        $eventTemplate->title = $request->title;
+        $eventTemplate->short_title = $request->short_title;
+        $eventTemplate->place = $request->place;
+        $eventTemplate->limit_number = $request->limit_number;
+        $eventTemplate->detail = $request->detail;
+        $eventTemplate->price1 = $request->price1;
+        $eventTemplate->price2 = $request->price2;
+        $eventTemplate->price3 = $request->price3;
+        $eventTemplate->price4 = $request->price4;
+        $eventTemplate->price5 = $request->price5;
+        $eventTemplate->save();
         return redirect()->route('eventTemplate');
     }
 }
