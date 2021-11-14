@@ -11,7 +11,7 @@
             <li ><a class="drawer-brand" href="#">管理者メニュー</a></li>
             <li ><a class="drawer-menu-item" href="/config/1">システム設定</a></li>
             <li ><a class="drawer-menu-item" href="/eventTemplate">テンプレート設定</a></li>
-            <li ><a class="drawer-menu-item" href="/admin/userList">ユーザーリスト</a></li>
+            <li ><a class="drawer-menu-item" href="/memberManagement">ユーザーリスト</a></li>
             <li ><a class="drawer-menu-item" href="/admin/inquiryList">問い合わせ管理</a></li>
             <li ><a class="drawer-menu-item" href="/admin/notice">お知らせ登録</a></li>
             <li ><a class="drawer-menu-item" href="/sales/index">売上管理</a></li>

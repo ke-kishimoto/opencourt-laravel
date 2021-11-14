@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\EventTemplateController;
+use App\Http\Controllers\MemberController;
+use App\Models\Member;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,4 @@ Route::post('login', [LoginLogoutController::class, 'loginCheck']);
 Route::get('eventTemplate/getList', [EventTemplateController::class, 'getList']);
 Route::get('eventTemplate/get/{id}', [EventTemplateController::class, 'get']);
 Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
-
+Route::post('member/getList', [MemberController::class, 'getMemberList']);
