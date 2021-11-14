@@ -17,7 +17,7 @@
             <option>女性</option>
             <option>その他</option>
         </select>
-        <button class="btn btn-primary" type="button">検索</button>
+        <button class="btn btn-primary" type="button" @click="search">検索</button>
     </div>
 
     <h1>ユーザー一覧</h1>
@@ -26,6 +26,7 @@
         職種：@{{ member.member_category.category_name }} <br>
         性別：@{{ member.gender_name }} <br>
         メールアドレス：@{{ member.email }} <br>
+        LINEユーザー：@{{ member.is_line_user }} <br>
         権限：@{{ member.role_name }} <br>
         ステータス：@{{ member.status_name }} <br>
         <br>
@@ -48,44 +49,15 @@
             memberList: [],
         },
         methods: {
-            getMemberList() {
+            search() {
                 let params = new URLSearchParams();
-                params.append('searchCondition', this.searchCondition);
+                params.append('name', this.searchCondition.name);
                 axios.post('/api/member/getList', params)
                 .then(response => this.memberList = response.data)
-                // fetch('/api/data/selectAll', {
-                //     method: 'post',
-                //     body: params
-                // })
-                // .then(res => res.json()
-                //     .then(data => {
-                //         this.userList = data;
-                //     })
-                // )
-                // .catch(errors => console.log(errors))
             },
-            changeAuthority(user) {
-                let params = new URLSearchParams();
-                params.append('tableName', 'Users');
-                params.append('id', user.id);
-                fetch('/api/data/updateFlg', {
-                    method: 'post',
-                    body: params
-                })
-                .then(() => {
-                    params = new URLSearchParams();
-                    params.append('tableName', 'Users');
-                    params.append('id', user.id);
-                    fetch('/api/data/selectById', {
-                        method: 'post',
-                        body: params
-                    }).then(res => res.json().then(data => user.authority_name = data.authority_name))
-                })
-                .catch(errors => console.log(errors))
-            }
         },
         created: function() {
-            this.getMemberList()
+            this.search()
         }
     })
 </script>

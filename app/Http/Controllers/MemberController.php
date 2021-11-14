@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Member;
+use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
 {
@@ -19,7 +20,7 @@ class MemberController extends Controller
 
     public function getMemberList(Request $request)
     {
-        $data = Member::get();
+        $data = Member::where('name', 'like', "%{$request->name}%")->get();
         return response($data, 200);
     }
 
@@ -28,8 +29,38 @@ class MemberController extends Controller
         return view('memberDetail', 
             [
                 'title' => 'メンバー詳細',
-                'member' => Member::with('memberCategory')->find($id),
+                // 'member' => Member::with('memberCategory')->find($id),
+                'id' => $id,
             ]
         );
+    }
+
+    public function get($id)
+    {
+        return response(Member::find($id), 200);
+    }
+
+    public function updateBlacklist($id)
+    {
+        $member = Member::find($id);
+        if($member->status === 1) {
+            $member->status = 2;
+        } else if ($member->status === 2) {
+            $member->status = 1;
+        }
+        $member->save();
+        return response($member, 200);
+    }
+
+    public function updateAuthority($id)
+    {
+        $member = Member::find($id);
+        if($member->role_level === 2) {
+            $member->role_level = 3;
+        } else if ($member->role_level === 3) {
+            $member->role_level = 2;
+        }
+        $member->save();
+        return response($member, 200);
     }
 }

@@ -42,5 +42,5 @@ Route::get('/eventTemplate', [EventTemplateController::class, 'index'])
 Route::post('/eventTemplate/create', [EventTemplateController::class, 'create'])
     ->name('eventTemplate.create');
 Route::get('/memberManagement', [MemberController::class, 'management']);
-Route::get('memberDetail/{id}', [MemberController::class, 'show']);
+Route::get('/memberDetail/{id}', [MemberController::class, 'show']);
 

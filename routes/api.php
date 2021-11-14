@@ -27,3 +27,7 @@ Route::get('eventTemplate/getList', [EventTemplateController::class, 'getList'])
 Route::get('eventTemplate/get/{id}', [EventTemplateController::class, 'get']);
 Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
 Route::post('member/getList', [MemberController::class, 'getMemberList']);
+Route::get('memberDetail/{id}', [MemberController::class, 'get']);
+Route::post('memberDetail/{id}/blacklist', [MemberController::class, 'updateBlacklist']);
+Route::post('memberDetail/{id}/authority', [MemberController::class, 'updateAuthority']);
+

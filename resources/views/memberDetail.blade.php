@@ -5,15 +5,15 @@
 <div id="app" v-cloak>
 
 <x-header></x-header>
-        ユーザー名：{{ $member->name }} <br>
-        職種：{{ $member->member_category->category_name }} <br>
-        性別：{{ $member->genderName }} <br>
-        メールアドレス：{{ $member->email }} <br>
-        権限：{{ $member->roleName }} <br>
-        ステータス：{{ $member->statusName }} <br>
+        ユーザー名：@{{ member.name }} <br>
+        性別：@{{ member.gender_name }} <br>
+        メールアドレス：@{{ member.email }} <br>
+        LINEユーザー：@{{ member.is_line_user }} <br>
+        権限：@{{ member.role_name }} <br>
+        ステータス：@{{ member.status_name }} <br>
         <br>
-        <button class="change-authority btn btn-info" type="button">ブラックリスト登録</button>
-        <button class="change-authority btn btn-info" type="button">権限の変更</button>
+        <button class="btn btn-info" type="button" @click="changeBlacklist">ブラックリスト登録</button>
+        <button class="btn btn-info" type="button" @click="changeAuthority">権限の変更</button>
     <x-footer/>
 
 </div>
@@ -22,6 +22,27 @@
 <script>
     const app = new Vue({
         el:"#app",
+        data: {
+            member: {},
+            member_id: location.pathname.replace('/memberDetail/', ''),
+        },
+        methods: {
+            getMember() {
+                axios.get('/api/memberDetail/' + this.member_id)
+                .then(response => this.member = response.data)
+            },
+            changeBlacklist() {
+                axios.post('/api/memberDetail/'+ this.member_id + '/blacklist')
+                .then(response => this.member = response.data)
+            },
+            changeAuthority() {
+                axios.post('/api/memberDetail/'+ this.member_id + '/authority')
+                .then(response => this.member = response.data)
+            },
+        },
+        created: function() {
+            this.getMember();
+        }
     })
 </script>
 </body>
