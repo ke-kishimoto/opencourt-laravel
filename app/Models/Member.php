@@ -49,12 +49,23 @@ class Member extends Model
         }
     }
 
+    public function getIsLineUserAttribute()
+    {
+        return $this->line_id !== null ? true : false;
+    }
+
     public function getMemberCategoryAttribute()
     {
         return $this->memberCategory();
     }
 
-    protected $appends = ['gender_name', 'role_name', 'status_name', 'member_category'];
+    protected $appends = [
+        'gender_name', 
+        'role_name', 
+        'status_name', 
+        'member_category',
+        'is_line_user',
+    ];
 
     public function memberCategory()
     {
