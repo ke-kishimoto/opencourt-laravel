@@ -21,7 +21,8 @@ class CreateMembersTable extends Migration
             $table->string('tel')->nullable();
             $table->string('password')->nullable();
             $table->integer('gender')->nullable();
-            $table->integer('category_id')->nullable();
+            $table->integer('member_category_id')->nullable();
+            $table->integer('status');
             $table->string('remark')->nullable();
             $table->string('line_id')->nullable();
             $table->string('line_access_token')->nullable();

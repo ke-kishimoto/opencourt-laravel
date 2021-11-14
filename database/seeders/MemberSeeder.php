@@ -20,40 +20,45 @@ class MemberSeeder extends Seeder
             "email" => "super@test.com",
             "name" => "super",
             "password" => Hash::make("password"),
-            "category_id" => 1,
+            "member_category_id" => 1,
             "gender" => 1,
+            "status" => 1,
         ]);
         DB::table('members')->insert([
             "role_level" => 1,
             "email" => "nebinosuk@gmail.com",
             "name" => "kishimoto keisuke",
             "password" => Hash::make("password"),
-            "category_id" => 1,
+            "member_category_id" => 1,
             "gender" => 1,
+            "status" => 1,
         ]);
         DB::table('members')->insert([
             "role_level" => 2,
             "email" => "admin@admin.com",
             "name" => "admin",
             "password" => Hash::make("password"),
-            "category_id" => 1,
+            "member_category_id" => 1,
             "gender" => 1,
+            "status" => 1,
         ]);
         DB::table('members')->insert([
             "role_level" => 3,
             "email" => "test1@test.com",
             "name" => "test1",
             "password" => Hash::make("password"),
-            "category_id" => 1,
+            "member_category_id" => 1,
             "gender" => 1,
+            "status" => 1,
         ]);
         DB::table('members')->insert([
             "role_level" => 3,
             "email" => "test2@test.com",
             "name" => "test2",
             "password" => Hash::make("password"),
-            "category_id" => 1,
+            "member_category_id" => 1,
             "gender" => 1,
+            "status" => 1,
         ]);
     }
 }
