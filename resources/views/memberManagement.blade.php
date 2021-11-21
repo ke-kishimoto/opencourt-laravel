@@ -6,16 +6,25 @@
 
     <x-header></x-header>
 
+    <div class="regist">
+        <button class="btn btn-primary" type="button">
+            <a href="/memberRegist">登録</a>
+        </button>
+    </div>
+
     <div class="search">
         <label>名前<input type="text" v-model="searchCondition.name"></label>
         <select v-model="searchCondition.category">
             <option>職種</option>
+            <option>社会人</option>
+            <option>大学生</option>
+            <option>高校生</option>
         </select>
         <select v-model="searchCondition.gendor">
-            <option>性別</option>
-            <option>男性</option>
-            <option>女性</option>
-            <option>その他</option>
+            <option value="">性別</option>
+            <option value="1">男性</option>
+            <option value="2">女性</option>
+            <option value="3">その他</option>
         </select>
         <button class="btn btn-primary" type="button" @click="search">検索</button>
     </div>
@@ -45,7 +54,9 @@
     const app = new Vue({
         el:"#app",
         data: {
-            searchCondition: {},
+            searchCondition: {
+                name: '',
+            },
             memberList: [],
         },
         methods: {
@@ -56,7 +67,7 @@
                 .then(response => this.memberList = response.data)
             },
         },
-        created: function() {
+        mounted: function() {
             this.search()
         }
     })

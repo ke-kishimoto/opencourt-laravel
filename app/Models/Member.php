@@ -76,4 +76,20 @@ class Member extends Model
     {
         return $this->hasMany(EventMember::class);
     }
+
+    protected $fillable = [
+        'role_level',
+        'member_category_id',
+        'name',
+        'tel',
+        'password',
+        'gender',
+        'member_category_id',
+        'status',
+        'remark',
+        'line_id',
+        'line_access_token',
+        'line_refresh_token',
+        'remember_token',
+    ];
 }

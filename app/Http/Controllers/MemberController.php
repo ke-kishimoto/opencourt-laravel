@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Member;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
@@ -11,6 +12,11 @@ class MemberController extends Controller
     public function newAccount()
     {
         return view('newAccount', ['title' => '新規登録']);
+    }
+
+    public function regist()
+    {
+        return view('memberRegist', ['title' => 'メンバー登録']);
     }
 
     public function management()
@@ -38,6 +44,25 @@ class MemberController extends Controller
     public function get($id)
     {
         return response(Member::find($id), 200);
+    }
+
+    public function create(Request $request)
+    {
+        if($request->password !== $request->rePassword) {
+            return view('memberRegist', ['title' => 'メンバー登録']);
+        }
+        Member::create([
+            'role_level' => $request->role_level,
+            'member_category_id' => $request->member_category_id,
+            'gender' => $request->gender,
+            'name' => $request->name,
+            'status' => 1,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'remark' => $request->remark,
+        ]);
+        return view('memberManagement', ['title' => 'メンバー管理']);
+
     }
 
     public function updateBlacklist($id)

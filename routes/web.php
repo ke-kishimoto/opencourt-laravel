@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\EventTemplateController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,9 @@ Route::post('/eventTemplate/create', [EventTemplateController::class, 'create'])
     ->name('eventTemplate.create');
 Route::get('/memberManagement', [MemberController::class, 'management']);
 Route::get('/memberDetail/{id}', [MemberController::class, 'show']);
+Route::get('/memberRegist', [MemberController::class, 'regist']);
+Route::post('/member/create', [MemberController::class, 'create'])
+    ->name('member.create');
+Route::get('/eventManagement', [EventController::class, 'management']);
+
 
