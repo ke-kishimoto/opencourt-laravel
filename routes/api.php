@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\EventTemplateController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\EventController;
 use App\Models\Member;
 
 /*
@@ -30,4 +31,4 @@ Route::post('member/getList', [MemberController::class, 'getMemberList']);
 Route::get('memberDetail/{id}', [MemberController::class, 'get']);
 Route::post('memberDetail/{id}/blacklist', [MemberController::class, 'updateBlacklist']);
 Route::post('memberDetail/{id}/authority', [MemberController::class, 'updateAuthority']);
-
+Route::post('event/getList', [EventController::class, 'getEventList']);

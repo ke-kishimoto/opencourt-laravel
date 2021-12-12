@@ -47,6 +47,6 @@ Route::get('/memberDetail/{id}', [MemberController::class, 'show']);
 Route::get('/memberRegist', [MemberController::class, 'regist']);
 Route::post('/member/create', [MemberController::class, 'create'])
     ->name('member.create');
-Route::get('/eventManagement', [EventController::class, 'management']);
-
+Route::get('/eventList', [EventController::class, 'list']);
+Route::get('/eventDetail/{id}', [EventController::class, 'show']);
 

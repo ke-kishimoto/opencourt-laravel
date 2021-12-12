@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             MemberCategorySeeder::class,
             MemberSeeder::class,
             EventTemplateSeeder::class,
+            EventSeeder::class,
         ]);
     }
 }
