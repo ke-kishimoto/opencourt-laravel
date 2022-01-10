@@ -15,7 +15,7 @@ class CreateTroubleReportsTable extends Migration
     {
         Schema::create('trouble_reports', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('member_id');
+            $table->integer('user_id');
             $table->integer('category');
             $table->string('title');
             $table->string('content');

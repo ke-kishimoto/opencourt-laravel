@@ -25,7 +25,7 @@ class CreateEventsTable extends Migration
             $table->string('detail')->nullable();
             $table->integer('expenses')->nullable();
             $table->integer('amount')->nullable();
-            $table->integer('number_of_member')->nullable();
+            $table->integer('number_of_user')->nullable();
             $table->integer('price1')->nullable();
             $table->integer('price2')->nullable();
             $table->integer('price3')->nullable();

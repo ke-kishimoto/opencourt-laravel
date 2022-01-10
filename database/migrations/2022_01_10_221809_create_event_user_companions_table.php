@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInquiriesTable extends Migration
+class CreateEventUserCompanionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class CreateInquiriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('inquiries', function (Blueprint $table) {
+        Schema::create('event_user_companions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id');
-            $table->integer('event_id')->nullable();
-            $table->string('content');
+            $table->integer('event_user_id');
+            $table->integer('category_id');
+            $table->integer('gender');
+            $table->string('name');
             $table->integer('status');
+            $table->integer('attendance');
+            $table->integer('amount');
+            $table->string('amount_remark');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +35,6 @@ class CreateInquiriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inquiries');
+        Schema::dropIfExists('event_user_companions');
     }
 }

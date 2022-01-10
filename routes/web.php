@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\EventTemplateController;
 use App\Http\Controllers\EventController;
@@ -31,7 +31,7 @@ Route::get('/', function () {
 Route::get('/login', [LoginLogoutController::class, 'login']);
 Route::get('/logout', [LoginLogoutController::class, 'logout']);
 Route::post('/loginCheck', [LoginLogoutController::class, 'loginCheck']);
-Route::get('/newAccount', [MemberController::class, 'newAccount']);
+Route::get('/newAccount', [UserController::class, 'newAccount']);
 Route::get('/privacyPolicy', function() {
     return view('privacyPolicy', ['title' => 'プライバシーポリシー']);
 });
@@ -42,11 +42,11 @@ Route::get('/eventTemplate', [EventTemplateController::class, 'index'])
     ->name('eventTemplate');
 Route::post('/eventTemplate/create', [EventTemplateController::class, 'create'])
     ->name('eventTemplate.create');
-Route::get('/memberManagement', [MemberController::class, 'management']);
-Route::get('/memberDetail/{id}', [MemberController::class, 'show']);
-Route::get('/memberRegist', [MemberController::class, 'regist']);
-Route::post('/member/create', [MemberController::class, 'create'])
-    ->name('member.create');
+Route::get('/userManagement', [UserController::class, 'management']);
+Route::get('/userDetail/{id}', [UserController::class, 'show']);
+Route::get('/userRegist', [UserController::class, 'regist']);
+Route::post('/user/create', [UserController::class, 'create'])
+    ->name('user.create');
 Route::get('/eventList', [EventController::class, 'list']);
 Route::get('/eventDetail/{id}', [EventController::class, 'show']);
 

@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\EventTemplate;
-use App\Models\Member;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,8 +16,8 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             ConfigSeer::class,
-            MemberCategorySeeder::class,
-            MemberSeeder::class,
+            UserCategorySeeder::class,
+            UserSeeder::class,
             EventTemplateSeeder::class,
             EventSeeder::class,
         ]);

@@ -21,12 +21,12 @@ class MemberService
             ]
         );
         
-        $result = MailService::createNewMember($member);
-        if($result) {
-            return $member->save();
-        } else {
-            throw new \Exception("登録に失敗しました。");
-        }
+        // $result = MailService::createNewMember($member);
+        // if($result) {
+        //     return $member->save();
+        // } else {
+        //     throw new \Exception("登録に失敗しました。");
+        // }
     }
 
     public function updateMember($request)

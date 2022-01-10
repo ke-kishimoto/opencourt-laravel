@@ -4,9 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\EventTemplateController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
-use App\Models\Member;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +26,8 @@ Route::post('login', [LoginLogoutController::class, 'loginCheck']);
 Route::get('eventTemplate/getList', [EventTemplateController::class, 'getList']);
 Route::get('eventTemplate/get/{id}', [EventTemplateController::class, 'get']);
 Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
-Route::post('member/getList', [MemberController::class, 'getMemberList']);
-Route::get('memberDetail/{id}', [MemberController::class, 'get']);
-Route::post('memberDetail/{id}/blacklist', [MemberController::class, 'updateBlacklist']);
-Route::post('memberDetail/{id}/authority', [MemberController::class, 'updateAuthority']);
+Route::post('user/getList', [UserController::class, 'getUserList']);
+Route::get('userDetail/{id}', [UserController::class, 'get']);
+Route::post('userDetail/{id}/blacklist', [UserController::class, 'updateBlacklist']);
+Route::post('userDetail/{id}/authority', [UserController::class, 'updateAuthority']);
 Route::post('event/getList', [EventController::class, 'getEventList']);

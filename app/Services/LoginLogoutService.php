@@ -3,22 +3,22 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Hash;
-use App\Models\Member;
+use App\Models\User;
 
 class LoginLogoutService
 {
     public function loginCheck($request)
     {
-        $member = Member::where('email', $request->email)->first();
-        if(!$member) {
+        $user = User::where('email', $request->email)->first();
+        if(!$user) {
             // emailが不正
             // return [];
         }
         $pass = Hash::make($request->password);
-        if($member !== $pass) {
+        if($user !== $pass) {
             // パスワードが不正
             // return [];
         }
-        return $member;
+        return $user;
     }
 }

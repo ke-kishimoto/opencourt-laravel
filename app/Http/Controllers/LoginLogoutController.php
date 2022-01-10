@@ -24,15 +24,15 @@ class LoginLogoutController extends Controller
 
     public function loginCheck(Request $request)
     {
-        $member = $this->loginLogoutService->loginCheck($request);
-        if($member) {
-            $token = $member->createToken('login');
-            $request->session()->put('user', $member);
+        $user = $this->loginLogoutService->loginCheck($request);
+        if($user) {
+            $token = $user->createToken('login');
+            $request->session()->put('user', $user);
             // return view('index', ['title' => 'カレンダー']);
             // return redirect()->route('index');
             // return redirect('/index');
             $data = [
-                'user' => $member,
+                'user' => $user,
                 'token' => $token->plainTextToken,
             ];
             return response($data, 200);

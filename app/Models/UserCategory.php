@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
+class UserCategory extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "events";
+    protected $table = "user_categories";
 
-    public function eventUsers()
-    {
-        return $this->hasMany(EventUser::class);
-    }
 }
