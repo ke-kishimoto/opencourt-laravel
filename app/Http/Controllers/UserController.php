@@ -16,12 +16,12 @@ class UserController extends Controller
 
     public function regist()
     {
-        return view('userRegist', ['title' => 'メンバー登録']);
+        return view('userRegist', ['title' => 'ユーザー登録']);
     }
 
     public function list()
     {
-        return view('userList', ['title' => 'メンバー管理']);
+        return view('userList', ['title' => 'ユーザー管理']);
     }
 
     public function getUserList(Request $request)
@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         return view('userDetail', 
             [
-                'title' => 'メンバー詳細',
+                'title' => 'ユーザー詳細',
                 'id' => $id,
             ]
         );

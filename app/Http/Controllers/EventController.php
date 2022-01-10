@@ -13,6 +13,11 @@ class EventController extends Controller
         return view('eventList', ['title' => 'イベントリスト']);
     }
 
+    public function regist()
+    {
+        return view('eventRegist', ['title' => 'イベント登録']);
+    }
+
     public function getEventList(Request $request)
     {
         $data = Event::get();
@@ -32,5 +37,10 @@ class EventController extends Controller
     public function get($id)
     {
         return response(Event::find($id), 200);
+    }
+
+    public function create()
+    {
+        
     }
 }

@@ -6,6 +6,12 @@
 
 <x-header/>
 
+    <div class="regist">
+        <button class="btn btn-primary" type="button">
+            <a href="/eventRegist">登録</a>
+        </button>
+    </div>
+
     <div class="search">
         <label>イベント名<input type="text" v-model="searchCondition.eventName"></label>
         <label>開始日付<input type="date" v-model="searchCondition.startDate"></label>
