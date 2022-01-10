@@ -19,7 +19,7 @@ class UserController extends Controller
         return view('userRegist', ['title' => 'メンバー登録']);
     }
 
-    public function management()
+    public function list()
     {
         return view('userList', ['title' => 'メンバー管理']);
     }

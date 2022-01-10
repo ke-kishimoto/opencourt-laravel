@@ -42,7 +42,7 @@ Route::get('/eventTemplate', [EventTemplateController::class, 'index'])
     ->name('eventTemplate');
 Route::post('/eventTemplate/create', [EventTemplateController::class, 'create'])
     ->name('eventTemplate.create');
-Route::get('/userManagement', [UserController::class, 'management']);
+Route::get('/userList', [UserController::class, 'list']);
 Route::get('/userDetail/{id}', [UserController::class, 'show']);
 Route::get('/userRegist', [UserController::class, 'regist']);
 Route::post('/user/create', [UserController::class, 'create'])
