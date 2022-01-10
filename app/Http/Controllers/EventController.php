@@ -39,8 +39,17 @@ class EventController extends Controller
         return response(Event::find($id), 200);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        
+        Event::create([
+            'title' => $request->title,
+            'short_title' => $request->shortTitle,
+            'game_date' => $request->gameDate,
+            'start_time' => $request->startTime,
+            'end_time' => $request->endTime,
+            'place' => $request->place,
+            'limit_number' => $request->limitNumber,
+            'detail' => $request->detail
+        ]);
     }
 }
