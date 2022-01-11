@@ -17,12 +17,12 @@
             </select>
         </p>
         <p>タイトル<input class="form-control" type="text" v-model="event.title" name="title" required></p>
-        <p>タイトル略称<input class="form-control" type="text" v-model="event.short_title" name="shortTitle" required></p>
-        <p>日程<input class="form-control" type="date" name="gameDate" required></p>
-        <p>開始時間<input class="form-control" type="time" step="600" name="startTime" required></p>
-        <p>終了時間<input class="form-control" type="time" step="600" name="endTime" required></p>
+        <p>タイトル略称<input class="form-control" type="text" v-model="event.short_title" name="short_title" required></p>
+        <p>日程<input class="form-control" type="date" name="event_date" required></p>
+        <p>開始時間<input class="form-control" type="time" step="600" name="start_time" required></p>
+        <p>終了時間<input class="form-control" type="time" step="600" name="end_time" required></p>
         <p>場所<input class="form-control" type="text" v-model="event.place" name="place" required></p>
-        <p>人数上限<input class="form-control" type="number" name="limitNumber" min="1" required></p>
+        <p>人数上限<input class="form-control" type="number" name="limit_number" min="1" required></p>
         <p>詳細<textarea class="form-control" name="detail"></textarea></p>
         <p>
             参加費<br>

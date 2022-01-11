@@ -52,3 +52,7 @@ Route::get('/eventRegist', [EventController::class, 'regist']);
 Route::get('/eventDetail/{id}', [EventController::class, 'show']);
 Route::post('/event/create', [EventController::class, 'create'])
     ->name('event.create');
+Route::post('/event/{id}/update', [EventController::class, 'update'])
+    ->name('event.update');
+Route::post('/event/{id}/delte', [EventController::class, 'delete'])
+    ->name('event.delete');

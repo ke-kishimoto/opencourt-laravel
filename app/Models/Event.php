@@ -17,4 +17,23 @@ class Event extends Model
     {
         return $this->hasMany(EventUser::class);
     }
+
+    protected $fillable = [
+        'title',
+        'short_title',
+        'event_date',
+        'start_time',
+        'end_time',
+        'place',
+        'limit_number',
+        'detail',
+        'expenses',
+        'amount',
+        'number_of_user',
+        'price1',
+        'price2',
+        'price3',
+        'price4',
+        'price5',
+    ];
 }
