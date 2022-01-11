@@ -60,7 +60,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'remark' => $request->remark,
         ]);
-        return view('userManagement', ['title' => 'メンバー管理']);
+        return view('userList', ['title' => 'メンバー管理']);
 
     }
 
