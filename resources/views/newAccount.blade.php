@@ -16,47 +16,38 @@
     </div>
     
     <hr>
- 
-    <div class="explain-box">
-        <span class="explain-tit">新規登録</span>
-        <p>イベントへ応募時、以下の入力項目がデフォルトで設定されます</p>
-    </div>
+    
     <p style="color:red; font-size:20px">@{{ msg }}</p>
     <p>
         <a v-if="editId !== -1 && (user.line_id === '' || user.line_id === null)" class="btn btn-sm btn-outline-dark" href="/user/passwordchange" role="button">
         パスワード変更
         </a>
     </p>
-        職種
-        <select v-model="user.occupation" class="custom-select mr-sm-2">
-            <option v-for="item in occupationOptions" v-bind:value="item.value">@{{ item.text }}</option>
-        </select>
+    <!-- <p v-if="(user.line_id === '' || user.line_id === null)"> -->
+        メールアドレス<input class="form-control" type="email" v-model="user.email">
+    <!--</p>-->
+    <p>名前<input class="form-control" type="text" v-model="user.name" required></p>
+    性別
+    <select v-model="user.sex" class="custom-select mr-sm-2">
+        <option v-for="item in sexOptions" v-bind:value="item.value">@{{ item.text }}</option>
+    </select>
+    カテゴリ
+    <select v-model="user.occupation" class="custom-select mr-sm-2">
+        <option v-for="item in occupationOptions" v-bind:value="item.value">@{{ item.category_name }}</option>
+    </select>
+    <div v-if="editId === -1">
+        <p>
+            パスワード
+            <input class="form-control" type="password" v-model="user.password" required maxlength="50">
         </p>
         <p>
-        性別
-        <select v-model="user.sex" class="custom-select mr-sm-2">
-            <option v-for="item in sexOptions" v-bind:value="item.value">@{{ item.text }}</option>
-        </select>
+            パスワード(再入力)
+            <input class="form-control" type="password" v-model="rePassword" required maxlength="50">
         </p>
-        <p>名前<input class="form-control" type="text" v-model="user.name" required></p>
+    </div>
+    <!--<p>備考<textarea class="form-control" v-model="user.remark"></textarea></p>-->
 
-        <p v-if="(user.line_id === '' || user.line_id === null)">
-            メール<input class="form-control" type="email" v-model="user.email">
-        </p>
-
-        <div v-if="editId === -1">
-            <p>
-                パスワード
-                <input class="form-control" type="password" v-model="user.password" required maxlength="50">
-            </p>
-            <p>
-                パスワード(再入力)
-                <input class="form-control" type="password" v-model="rePassword" required maxlength="50">
-            </p>
-        </div>
-        <p>備考<textarea class="form-control" v-model="user.remark"></textarea></p>
-
-        <p><button class="btn btn-secondary" type="button" @click="addCompanion">同伴者追加</button></p>
+        <!-- <p><button class="btn btn-secondary" type="button" @click="addCompanion">同伴者追加</button></p>
 
         <div v-for="(companion, index) in companions" v-bind:key="index">
             @{{ index + 1 }}人目 
@@ -74,7 +65,7 @@
                 <option v-for="item in sexOptions" v-bind:value="item.value">@{{ item.text }}</option>
             </select>
             </p>
-        </div>
+        </div> -->
 
         <button class="btn btn-primary" type="button" @click="register">登録</button>
     <br>
@@ -99,9 +90,9 @@
             rePassword: '',
             companions: [],
             occupationOptions: [
-                {text: '社会人', value: '1'},
-                {text: '大学生', value: '2'},
-                {text: '高校生', value: '3'},
+                // {text: '社会人', value: '1'},
+                // {text: '大学生', value: '2'},
+                // {text: '高校生', value: '3'},
             ],
             sexOptions: [
                 {text: '男性', value: '1'},
@@ -146,6 +137,13 @@
                     })
                 )
                 .catch(errors => console.log(errors))
+            },
+            fetchUserCategories(){
+                axios.get('api/user/categories')
+                .then(response => {
+                    console.log(response)
+                    this.occupationOptions = response.data
+                })
             },
             register() {
 
@@ -229,6 +227,7 @@
         created: function() {
             this.getLoginUser()
             this.getLineParam()
+            this.fetchUserCategories()
         }
     })
 </script>

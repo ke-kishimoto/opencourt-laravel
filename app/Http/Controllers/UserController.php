@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserCategory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -86,5 +87,10 @@ class UserController extends Controller
         }
         $user->save();
         return response($user, 200);
+    }
+    
+    public function fetchUserCategories()
+    {
+        return response(UserCategory::select('id','category_name')->get(),200);
     }
 }

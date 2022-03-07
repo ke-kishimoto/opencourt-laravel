@@ -12,5 +12,5 @@ class UserCategory extends Model
     use SoftDeletes;
 
     protected $table = "user_categories";
-
+    
 }
