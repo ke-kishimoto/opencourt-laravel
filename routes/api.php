@@ -30,5 +30,6 @@ Route::post('user/getList', [UserController::class, 'getUserList']);
 Route::get('userDetail/{id}', [UserController::class, 'get']);
 Route::post('userDetail/{id}/blacklist', [UserController::class, 'updateBlacklist']);
 Route::post('userDetail/{id}/authority', [UserController::class, 'updateAuthority']);
+Route::get('user/categories',[UserController::class, 'fetchUserCategories']);
 Route::post('event/getList', [EventController::class, 'getEventList']);
 Route::get('eventDetail/{id}', [EventController::class, 'get']);
