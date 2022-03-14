@@ -23,9 +23,7 @@
         パスワード変更
         </a>
     </p>
-    <!-- <p v-if="(user.line_id === '' || user.line_id === null)"> -->
-        メールアドレス<input class="form-control" type="email" v-model="user.email">
-    <!--</p>-->
+    <p>メールアドレス<input class="form-control" type="email" v-model="user.email"></p>
     <p>名前<input class="form-control" type="text" v-model="user.name" required></p>
     性別
     <select v-model="user.sex" class="custom-select mr-sm-2">
@@ -45,27 +43,6 @@
             <input class="form-control" type="password" v-model="rePassword" required maxlength="50">
         </p>
     </div>
-    <!--<p>備考<textarea class="form-control" v-model="user.remark"></textarea></p>-->
-
-        <!-- <p><button class="btn btn-secondary" type="button" @click="addCompanion">同伴者追加</button></p>
-
-        <div v-for="(companion, index) in companions" v-bind:key="index">
-            @{{ index + 1 }}人目 
-            <button class="btn btn-danger" type="button" @click="deleteCompanion(index)">同伴者削除</button>
-            <p>名前<input class="form-control" type="text" v-model="companion.name" required></p>
-            <p>
-            職種
-            <select class="custom-select mr-sm-2" v-model="companion.occupation">
-                <option v-for="item in occupationOptions" v-bind:value="item.value">@{{ item.text }}</option>
-            </select>
-            </p>
-            <p>
-            性別
-            <select class="custom-select mr-sm-2" v-model="companion.sex">
-                <option v-for="item in sexOptions" v-bind:value="item.value">@{{ item.text }}</option>
-            </select>
-            </p>
-        </div> -->
 
         <button class="btn btn-primary" type="button" @click="register">登録</button>
     <br>
@@ -89,11 +66,7 @@
             user: {},
             rePassword: '',
             companions: [],
-            occupationOptions: [
-                // {text: '社会人', value: '1'},
-                // {text: '大学生', value: '2'},
-                // {text: '高校生', value: '3'},
-            ],
+            occupationOptions: [],
             sexOptions: [
                 {text: '男性', value: '1'},
                 {text: '女性', value: '2'},
