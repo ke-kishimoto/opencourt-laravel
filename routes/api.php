@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\EventTemplateController;
 use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\UserCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 
@@ -26,6 +27,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/privacyPolicy', [PrivacyPolicyController::class, 'get']);
   Route::post('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
   Route::put('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
+  Route::get('/userCategory', [UserCategoryController::class, 'all']);
+  Route::post('/userCategory', [UserCategoryController::class, 'updateAll']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
