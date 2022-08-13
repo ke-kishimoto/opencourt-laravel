@@ -17,9 +17,8 @@ use App\Http\Controllers\EventController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['auth:sanctum']], function () {
+  Route::post('logout', [LoginLogoutController::class, 'logout']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);

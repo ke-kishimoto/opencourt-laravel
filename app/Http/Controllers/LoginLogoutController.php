@@ -42,4 +42,12 @@ class LoginLogoutController extends Controller
         'MESSAGE' => '認証エラー',
     ], 400);
   }
+
+  public function logout(Request $request)
+  {
+    // トークンの削除
+    Log::debug('user', [$request->user()]);
+    $request->user()->tokens()->delete();
+    // $request->user()->currentAccessToken()->delete();
+  }
 }
