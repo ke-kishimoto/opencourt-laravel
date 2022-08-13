@@ -20,12 +20,12 @@ class UserCategoryController extends Controller
     public function updateAll(Request $request)
     {
       foreach($request->categories as $category) {
-        if($category["id"]) {
+        if(isset($category["id"])) {
           $model = UserCategory::find($category["id"]);
           $model->category_name = $category["category_name"] ?? '';
           $model->save();
         } else {
-          if($category["category_name"]) {
+          if(isset($category["category_name"])) {
             $model = new UserCategory();
             $model->category_name = $category["category_name"] ?? '';
             $model->save();
