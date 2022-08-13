@@ -22,14 +22,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('login', [LoginLogoutController::class, 'loginCheck']);
-Route::get('eventTemplate/getList', [EventTemplateController::class, 'getList']);
-Route::get('eventTemplate/get/{id}', [EventTemplateController::class, 'get']);
-Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
-Route::post('user/getList', [UserController::class, 'getUserList']);
-Route::get('userDetail/{id}', [UserController::class, 'get']);
-Route::post('userDetail/{id}/blacklist', [UserController::class, 'updateBlacklist']);
-Route::post('userDetail/{id}/authority', [UserController::class, 'updateAuthority']);
-Route::get('user/categories',[UserController::class, 'fetchUserCategories']);
-Route::post('event/getList', [EventController::class, 'getEventList']);
-Route::get('eventDetail/{id}', [EventController::class, 'get']);
+Route::post('login', [LoginLogoutController::class, 'login']);
+// Route::post('login', [LoginLogoutController::class, 'loginCheck']);
+// Route::get('eventTemplate/getList', [EventTemplateController::class, 'getList']);
+// Route::get('eventTemplate/get/{id}', [EventTemplateController::class, 'get']);
+// Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
+// Route::post('user/getList', [UserController::class, 'getUserList']);
+// Route::get('userDetail/{id}', [UserController::class, 'get']);
+// Route::post('userDetail/{id}/blacklist', [UserController::class, 'updateBlacklist']);
+// Route::post('userDetail/{id}/authority', [UserController::class, 'updateAuthority']);
+// Route::get('user/categories',[UserController::class, 'fetchUserCategories']);
+// Route::post('event/getList', [EventController::class, 'getEventList']);
+// Route::get('eventDetail/{id}', [EventController::class, 'get']);

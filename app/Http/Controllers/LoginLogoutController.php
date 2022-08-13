@@ -3,50 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\LoginLogoutService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class LoginLogoutController extends Controller
 {
-
-    protected $loginLogoutService;
-
-    public function __construct(LoginLogoutService $loginLogoutService)
-    {
-        $this->loginLogoutService = $loginLogoutService;
+  public function login(Request $request) {
+    Log::debug($request);
+    if(strpos($request->email, '@')) {
+        $rule = ['required', 'email'];
+        $column = 'email';
+    } else {
+        $rule = 'required';
+        $column = 'user_name';
     }
+    $credentials = $request->validate([
+        'email' => $rule,
+        'password' => ['required'],
+    ]);
 
-    public function login(Request $request)
-    {
-        Log::debug('user', [$request->user()]);
-        return view('login', ['title' => 'ログイン']);
-    }
-
-    public function loginCheck(Request $request)
-    {
-        $user = $this->loginLogoutService->loginCheck($request);
+    if ($column === 'email' && Auth::attempt($credentials) || $column === 'login_id') {
+        $user = User::where($column, $request->email)->first();
         if($user) {
-            $token = $user->createToken('login');
-            $request->session()->put('user', $user);
-            // return view('index', ['title' => 'カレンダー']);
-            // return redirect()->route('index');
-            // return redirect('/index');
-            $data = [
-                'user' => $user,
-                'token' => $token->plainTextToken,
-            ];
-            return response($data, 200);
+            $token = $user->createToken('my-app-token');
 
-        } else {
-            // return view('login', ['title' => 'ログイン']);
-            $data = [];
-            return response($data, 400);
+            return response([
+                'user' => $user,
+                'token' => $token->plainTextToken
+            ], 200);
         }
     }
 
-    public function logout(Request $request)
-    {
-        $request->session()->flush();
-        return view('index', ['title' => 'カレンダー']);
-    }
+    return response([
+        'MESSAGE' => '認証エラー',
+    ], 400);
+  }
 }
