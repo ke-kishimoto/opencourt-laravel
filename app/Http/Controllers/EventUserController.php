@@ -12,7 +12,10 @@ class EventUserController extends Controller
 
     public function getEventUser($id)
     {
-      $users = EventUser::with('user')->with('user.userCategory')
+      $users = EventUser::with('user')
+      ->with('user.userCategory')
+      ->with('companions')
+      ->with('companions.userCategory')
       ->where('event_id', $id)
       ->orderBy('created_at')->get();
 

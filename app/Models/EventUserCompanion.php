@@ -25,10 +25,35 @@ class EventUserCompanion extends Model
       'amount_remark',
     ];
 
+    protected $appends = [
+      'gender_name', 
+      'user_category',
+    ];
+
+    public function getGenderNameAttribute()
+    {
+        if($this->attributes['gender'] === 1) {
+            return '男性';
+        } else if($this->attributes['gender'] === 2) {
+            return '女性';
+        } else {
+            return 'その他';
+        }
+    }
 
     public function eventUser()
     {
         return $this->belongsTo(EventUser::class);
+    }
+
+    public function getUserCategoryAttribute()
+    {
+        return $this->userCategory();
+    }
+
+    public function userCategory()
+    {
+        return $this->belongsTo(UserCategory::class);
     }
 
 }
