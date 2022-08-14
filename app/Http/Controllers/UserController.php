@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function get($id)
     {
-        return response(User::find($id), 200);
+        return response(User::with('userCategory')->find($id), 200);
     }
 
     public function create(Request $request)
