@@ -8,9 +8,19 @@ use App\Models\EventUser;
 
 class EventUserController extends Controller
 {
+
+    public function getEventUser($id)
+    {
+      $users = EventUser::with('user')->with('user.userCategory')
+      ->where('event_id', $id)
+      ->orderBy('created_at')->get();
+
+      return response($users, 200);
+    }
+
     public function create(Request $request)
     {
-      $result =EventUser::create([
+      $result = EventUser::create([
         'event_id' => $request->event_id,
         'user_id' => $request->user_id,
         'remark' => $request->remark,
