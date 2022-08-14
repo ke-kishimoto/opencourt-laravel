@@ -22,6 +22,7 @@ use App\Http\Controllers\EventController;
 Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/logout', [LoginLogoutController::class, 'logout']);
   Route::post('/eventTemplate', [EventTemplateController::class, 'create']);
+  Route::put('/eventTemplate', [EventTemplateController::class, 'create']);
   Route::get('/getTemplateList', [EventTemplateController::class, 'getList']);
   Route::get('/getTemplate/{id}', [EventTemplateController::class, 'get']);
   Route::get('/privacyPolicy', [PrivacyPolicyController::class, 'get']);
