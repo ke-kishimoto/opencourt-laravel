@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\EventUser;
 use App\Models\EventUserCompanion;
 
+// TODO-トランザクション追加
+
 class EventUserController extends Controller
 {
 
@@ -46,6 +48,20 @@ class EventUserController extends Controller
       }
 
       return response($eventUser, 200);
+    }
+
+    public function delete(Request $request, $eventId)
+    {
+      $eventUser = EventUser::where('event_id', $eventId)
+      ->where('user_id', $request->user()->id)
+      ->first();
+
+      // 同伴者削除
+      EventUserCompanion::where('event_user_id', $eventUser->id)->delete();
+
+      $eventUser->delete();
+
+      return response([], 200);
 
     }
 }
