@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::put('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
   Route::get('/userCategory', [UserCategoryController::class, 'all']);
   Route::post('/userCategory', [UserCategoryController::class, 'updateAll']);
+  Route::get('/getUserList', [UserController::class, 'getUserList']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);

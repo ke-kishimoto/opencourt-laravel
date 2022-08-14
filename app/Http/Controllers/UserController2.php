@@ -9,12 +9,36 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    public function newAccount()
+    {
+        return view('newAccount', ['title' => '新規登録']);
+    }
+
+    public function regist()
+    {
+        return view('userRegist', ['title' => 'ユーザー登録']);
+    }
+
+    public function list()
+    {
+        return view('userList', ['title' => 'ユーザー管理']);
+    }
+
     public function getUserList(Request $request)
     {
-        $keyword = $request->name ?? '';
-        $data = User::with('userCategory')->where('name', 'like', "%{$keyword}%")->get();
+        $data = User::where('name', 'like', "%{$request->name}%")->get();
         return response($data, 200);
-    } 
+    }
+
+    public function show($id)
+    {
+        return view('userDetail', 
+            [
+                'title' => 'ユーザー詳細',
+                'id' => $id,
+            ]
+        );
+    }
 
     public function get($id)
     {
