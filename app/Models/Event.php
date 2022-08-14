@@ -13,6 +13,21 @@ class Event extends Model
 
     protected $table = "events";
 
+    protected $appends = [
+      'day', 
+      'status',
+    ];
+
+    public function getDayAttribute()
+    {
+      return substr($this->attributes['event_date'], 8,2);
+    }
+
+    public function getStatusAttribute()
+    {
+      return '1';
+    }
+
     public function eventUsers()
     {
         return $this->hasMany(EventUser::class);
