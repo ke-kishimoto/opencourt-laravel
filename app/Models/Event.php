@@ -25,7 +25,7 @@ class Event extends Model
 
     public function getStatusAttribute()
     {
-      return '1';
+      return 1;
     }
 
     public function eventUsers()
