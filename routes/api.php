@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/userCategory', [UserCategoryController::class, 'updateAll']);
   Route::get('/getUserList', [UserController::class, 'getUserList']);
   Route::get('/user/{id}', [UserController::class, 'get']);
+  Route::get('/event/{id}', [EventController::class, 'get']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);

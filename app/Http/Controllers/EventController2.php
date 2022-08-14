@@ -8,11 +8,30 @@ use App\Models\Event;
 
 class EventController extends Controller
 {
-    
+    public function list()
+    {
+        return view('eventList', ['title' => 'イベントリスト']);
+    }
+
+    public function regist()
+    {
+        return view('eventRegist', ['title' => 'イベント登録']);
+    }
+
     public function getEventList(Request $request)
     {
         $data = Event::get();
         return response($data, 200);
+    }
+
+    public function show($id)
+    {
+        return view('eventDetail', 
+            [
+                'title' => 'イベント詳細',
+                'id' => $id,
+            ]
+        );
     }
 
     public function get($id)
