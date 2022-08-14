@@ -17,16 +17,11 @@ class EventController extends Controller
 
     public function getEventByMonth($year, $month)
     {
-      Log::debug($year);
-      Log::debug($month);
-
         $events = Event::whereRaw('substring(event_date, 1, 4) = ?', [$year])
         ->whereRaw("substring(event_date, 6, 2) = ?", [$month])
         ->orderBy('event_date')
         ->orderBy('start_time')
         ->get();
-
-        Log::debug($events);
 
         return response($events, 200);
     }

@@ -8,6 +8,7 @@ use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\UserCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/event/{id}', [EventController::class, 'get']);
   Route::post('/event', [EventController::class, 'create']);
   Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
+  Route::post('/eventUser', [EventUserController::class, 'create']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);

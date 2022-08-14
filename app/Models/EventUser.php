@@ -11,7 +11,17 @@ class EventUser extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "event_user";
+    protected $table = "event_users";
+
+    protected $fillable = [
+      'event_id',
+      'user_id',
+      'remark',
+      'status',
+      'attendance',
+      'amount',
+      'amount_remark',
+    ];
 
     public function user()
     {
