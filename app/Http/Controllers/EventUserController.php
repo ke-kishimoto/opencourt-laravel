@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\EventUser;
+use App\Models\EventUserCompanion;
 
 class EventUserController extends Controller
 {
@@ -20,7 +21,7 @@ class EventUserController extends Controller
 
     public function create(Request $request)
     {
-      $result = EventUser::create([
+      $eventUser = EventUser::create([
         'event_id' => $request->event_id,
         'user_id' => $request->user_id,
         'remark' => $request->remark,
@@ -28,10 +29,20 @@ class EventUserController extends Controller
         'attendance' => '1',
       ]);
 
-      // TODO
       // 同伴者の登録
+      foreach($request->companions as $companion) {
+        EventUserCompanion::create([
+          'event_id' => $request->event_id,
+          'event_user_id' => $eventUser->id,
+          'name' => $companion['name'],
+          'user_category_id' => $companion['category'],
+          'gender' => $companion['gender'],
+          'status' => '1',
+          'attendance' => '1',
+        ]);
+      }
 
-      return response($result, 200);
+      return response($eventUser, 200);
 
     }
 }
