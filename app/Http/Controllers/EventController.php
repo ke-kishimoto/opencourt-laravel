@@ -22,22 +22,23 @@ class EventController extends Controller
 
     public function create(Request $request)
     {
-        Event::create([
+        $result = Event::create([
             'title' => $request->title,
             'short_title' => $request->short_title,
-            'event_date' => $request->event_date,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'event_date' => substr($request->event_date, 0, 10),
+            'start_time' => substr($request->start_time, 11, 5),
+            'end_time' => substr($request->end_time, 11, 5),
             'place' => $request->place,
             'limit_number' => $request->limit_number,
-            'detail' => $request->detail,
+            'description' => $request->description,
             'price1' => $request->price1,
             'price2' => $request->price2,
             'price3' => $request->price3,
+            'price4' => $request->price4,
+            'price5' => $request->price5,
         ]);
 
-        return view('eventList', ['title' => 'イベント管理']);
-
+        return response($result, 200);
     }
 
     public function update(Request $request, $id)

@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/getUserList', [UserController::class, 'getUserList']);
   Route::get('/user/{id}', [UserController::class, 'get']);
   Route::get('/event/{id}', [EventController::class, 'get']);
+  Route::post('/event', [EventController::class, 'create']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
