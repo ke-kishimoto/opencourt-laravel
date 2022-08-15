@@ -28,7 +28,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::put('/eventTemplate', [EventTemplateController::class, 'create']);
   Route::get('/getTemplateList', [EventTemplateController::class, 'getList']);
   Route::get('/getTemplate/{id}', [EventTemplateController::class, 'get']);
-  
+  Route::delete('/eventTemplate/{id}', [EventTemplateController::class, 'delete']);
+
   // プライバシーポリシー
   Route::get('/privacyPolicy', [PrivacyPolicyController::class, 'get']);
   Route::post('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
