@@ -9,6 +9,7 @@ use App\Http\Controllers\UserCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventUserController;
+use App\Http\Controllers\NewsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/eventUser', [EventUserController::class, 'create']);
   Route::delete('/eventUser/{eventId}', [EventUserController::class, 'delete']);
   Route::get('getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
+
+  // ニュース
+  Route::post('/news', [NewsController::class, 'create']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
