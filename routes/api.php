@@ -22,22 +22,34 @@ use App\Http\Controllers\EventUserController;
 */
 Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/logout', [LoginLogoutController::class, 'logout']);
+
+  // イベントテンプレート
   Route::post('/eventTemplate', [EventTemplateController::class, 'create']);
   Route::put('/eventTemplate', [EventTemplateController::class, 'create']);
   Route::get('/getTemplateList', [EventTemplateController::class, 'getList']);
   Route::get('/getTemplate/{id}', [EventTemplateController::class, 'get']);
+  
+  // プライバシーポリシー
   Route::get('/privacyPolicy', [PrivacyPolicyController::class, 'get']);
   Route::post('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
   Route::put('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
+  
+  // ユーザーカテゴリ
   Route::get('/userCategory', [UserCategoryController::class, 'all']);
   Route::post('/userCategory', [UserCategoryController::class, 'updateAll']);
+
+  // ユーザー
   Route::get('/getUserList', [UserController::class, 'getUserList']);
   Route::get('/user/{id}', [UserController::class, 'get']);
+
+  // イベント
   Route::get('/event/{id}', [EventController::class, 'get']);
   Route::post('/event', [EventController::class, 'create']);
   Route::put('/event', [EventController::class, 'update']);
   Route::delete('/event/{id}', [EventController::class, 'delete']);
   Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
+
+  // イベント参加者
   Route::get('/getEventUser/{id}', [EventUserController::class, 'getEventUser']);
   Route::post('/eventUser', [EventUserController::class, 'create']);
   Route::delete('/eventUser/{eventId}', [EventUserController::class, 'delete']);
