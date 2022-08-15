@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/user/{id}', [UserController::class, 'get']);
   Route::get('/event/{id}', [EventController::class, 'get']);
   Route::post('/event', [EventController::class, 'create']);
+  Route::put('/event', [EventController::class, 'update']);
   Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
   Route::get('/getEventUser/{id}', [EventUserController::class, 'getEventUser']);
   Route::post('/eventUser', [EventUserController::class, 'create']);

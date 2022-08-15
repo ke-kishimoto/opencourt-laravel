@@ -52,25 +52,27 @@ class EventController extends Controller
         return response($result, 200);
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $event = Event::findOrFail($id);
-    //     $event->title = $request->title;
-    //     $event->short_title = $request->short_title;
-    //     $event->event_date = $request->event_date;
-    //     $event->start_time = $request->start_time;
-    //     $event->end_time = $request->end_time;
-    //     $event->place = $request->place;
-    //     $event->limit_number = $request->limit_number;
-    //     $event->detail = $request->detail;
-    //     $event->price1 = $request->price1;
-    //     $event->price2 = $request->price2;
-    //     $event->price3 = $request->price3;
-    //     $event->save();
+    public function update(Request $request)
+    {
+        $event = Event::findOrFail($request->id);
+        $event->title = $request->title;
+        $event->short_title = $request->short_title;
+        $event->event_date = $request->event_date;
+        $event->start_time = $request->start_time;
+        $event->end_time = $request->end_time;
+        $event->place = $request->place;
+        $event->limit_number = $request->limit_number;
+        $event->description = $request->description;
+        $event->price1 = $request->price1;
+        $event->price2 = $request->price2;
+        $event->price3 = $request->price3;
+        $event->price4 = $request->price4;
+        $event->price5 = $request->price5;
+        $event->save();
 
-    //     return view('eventList', ['title' => 'イベント管理']);
+        return response($event, 200);
 
-    // }
+    }
 
     // public function delete($id)
     // {
