@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Event;
+use App\Models\EventUser;
+use App\Models\EventUserCompanion;
+
+// TODO-トランザクション
 
 class EventController extends Controller
 {
@@ -77,10 +81,13 @@ class EventController extends Controller
     public function delete($id)
     {
         $event = Event::findOrFail($id);
-        $event->delete();
-
-        // TODO
+        
+        // TODO-transaction
         // 参加者と同伴者も削除
+        EventUser::where('event_id', $event->id)->delete();
+        EventUserCompanion::where('event_id', $event->id)->delete();
+        
+        $event->delete();
 
         return response([], 200);
     }
