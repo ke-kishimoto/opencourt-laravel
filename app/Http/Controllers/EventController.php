@@ -13,9 +13,9 @@ use App\Models\EventUserCompanion;
 class EventController extends Controller
 {
     
-    public function getEventList(Request $request)
+    public function search(Request $request)
     {
-        $data = Event::get();
+        $data = Event::orderByDesc('created_at')->get();
         return response($data, 200);
     }
 

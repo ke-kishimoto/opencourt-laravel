@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::put('/event', [EventController::class, 'update']);
   Route::delete('/event/{id}', [EventController::class, 'delete']);
   Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
+  Route::get('searchEvent', [EventController::class, 'search']);
 
   // イベント参加者
   Route::get('/getEventUser/{id}', [EventUserController::class, 'getEventUser']);
