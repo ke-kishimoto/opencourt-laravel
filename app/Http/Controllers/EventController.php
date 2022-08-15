@@ -74,12 +74,11 @@ class EventController extends Controller
 
     }
 
-    // public function delete($id)
-    // {
-    //     $event = Event::findOrFail($id);
-    //     $event->delete();
+    public function delete($id)
+    {
+        $event = Event::findOrFail($id);
+        $event->delete();
 
-    //     return view('eventList', ['title' => 'イベント管理']);
-
-    // }
+        return response([], 200);
+    }
 }
