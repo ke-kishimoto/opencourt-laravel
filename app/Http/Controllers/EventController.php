@@ -79,6 +79,9 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         $event->delete();
 
+        // TODO
+        // 参加者と同伴者も削除
+
         return response([], 200);
     }
 }
