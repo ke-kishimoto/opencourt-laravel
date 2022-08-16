@@ -57,9 +57,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/eventUser', [EventUserController::class, 'create']);
   Route::delete('/eventUser/{eventId}', [EventUserController::class, 'delete']);
   Route::get('getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
+  Route::post('bulkResevation', [EventUserController::class, 'bulkResevation']);
 
   // ニュース
   Route::post('/news', [NewsController::class, 'create']);
+  Route::get('/getAllNews', [NewsController::class, 'getAllNews']);
+  Route::get('/getNewNews', [NewsController::class, 'getNewNews']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);

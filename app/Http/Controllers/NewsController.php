@@ -22,9 +22,10 @@ class NewsController extends Controller
         return response($news, 200);
     }
 
-    public function getNewsList()
+    public function getNewNews()
     {
-
+        $news = News::orderByDesc('created_at')->first();
+        return response($news, 200);
     }
 
     public function create(Request $request)

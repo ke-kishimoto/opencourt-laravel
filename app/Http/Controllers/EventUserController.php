@@ -73,4 +73,19 @@ class EventUserController extends Controller
       return response([], 200);
 
     }
+
+    public function bulkResevation(Request $request)
+    {
+      foreach($request->event_ids as $eventId) {
+        EventUser::create([
+          'event_id' => $eventId,
+          'user_id' => $request->user_id,
+          'status' => '1',
+          'attendance' => '1',
+        ]);
+      }
+
+      return response([], 200);
+
+    }
 }
