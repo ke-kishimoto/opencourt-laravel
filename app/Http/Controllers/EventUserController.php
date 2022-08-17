@@ -35,12 +35,20 @@ class EventUserController extends Controller
 
     public function create(Request $request)
     {
+      // TODO-イベントの状態によって判断
+      $status = 'participation';
+      if ($status === 'participation') {
+        $attendance = 'attendance';
+      } else {
+        $attendance = 'absence';
+      }
+
       $eventUser = EventUser::create([
         'event_id' => $request->event_id,
         'user_id' => $request->user_id,
         'remark' => $request->remark,
-        'status' => '1',
-        'attendance' => '1',
+        'status' => $status,
+        'attendance' => $attendance,
       ]);
 
       // 同伴者の登録
