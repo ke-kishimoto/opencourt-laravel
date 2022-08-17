@@ -59,8 +59,8 @@ class EventUserController extends Controller
           'name' => $companion['name'],
           'user_category_id' => $companion['category'],
           'gender' => $companion['gender'],
-          'status' => '1',
-          'attendance' => '1',
+          'status' => $status,
+          'attendance' => $attendance,
         ]);
       }
 
@@ -85,11 +85,19 @@ class EventUserController extends Controller
     public function bulkResevation(Request $request)
     {
       foreach($request->event_ids as $eventId) {
+        // TODO-イベントの状態によって判断
+        $status = 'participation';
+        if ($status === 'participation') {
+          $attendance = 'attendance';
+        } else {
+          $attendance = 'absence';
+        }
+
         EventUser::create([
           'event_id' => $eventId,
           'user_id' => $request->user_id,
-          'status' => '1',
-          'attendance' => '1',
+          'status' => $status,
+          'attendance' => $attendance,
         ]);
       }
 
