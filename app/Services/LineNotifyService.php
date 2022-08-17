@@ -25,6 +25,14 @@ class LineNotifyService
       $this->lineNotify($msg);
     }
 
+    public function cancel($eventId, $user)
+    {
+      $event = Event::find($eventId);
+      $msg = view('line.notify.cancel', ['user' => $user, 'event' => $event,])
+      ->render();
+      $this->lineNotify($msg);
+    }
+
     // LINE通知用のfunction
     private function lineNotify($message) 
     {

@@ -14,6 +14,7 @@ class EventUserController extends Controller
 {
 
     private $lineNotifyService;
+
     public function __construct(LineNotifyService $lineNotify)
     {
         $this->lineNotifyService = $lineNotify;
@@ -83,16 +84,23 @@ class EventUserController extends Controller
       return response($eventUser, 200);
     }
 
+    // 参加のキャンセル
     public function delete(Request $request, $eventId)
     {
       $eventUser = EventUser::where('event_id', $eventId)
       ->where('user_id', $request->user()->id)
       ->first();
 
-      // 同伴者削除
+      // 同伴者キャンセル
       EventUserCompanion::where('event_user_id', $eventUser->id)->delete();
 
+      // ユーザーのキャンセル
       $eventUser->delete();
+
+      // LINE通知
+      $this->lineNotifyService->cancel(
+        $eventId, 
+        $request->user());
 
       return response([], 200);
 
