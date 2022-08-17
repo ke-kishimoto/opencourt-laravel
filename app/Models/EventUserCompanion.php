@@ -32,9 +32,9 @@ class EventUserCompanion extends Model
 
     public function getGenderNameAttribute()
     {
-        if($this->attributes['gender'] === 1) {
+        if($this->attributes['gender'] === 'men') {
             return '男性';
-        } else if($this->attributes['gender'] === 2) {
+        } else if($this->attributes['gender'] === 'women') {
             return '女性';
         } else {
             return 'その他';
