@@ -6,11 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\EventUser;
 use App\Models\EventUserCompanion;
+use App\Services\LineNotifyService;
 
 // TODO-トランザクション追加
 
 class EventUserController extends Controller
 {
+
+    private $lineNotifyService;
+    public function __construct(LineNotifyService $lineNotify)
+    {
+        $this->lineNotifyService = $lineNotify;
+    }
 
     public function getEventUser($id)
     {
@@ -52,6 +59,7 @@ class EventUserController extends Controller
       ]);
 
       // 同伴者の登録
+      $companionCount = 0;
       foreach($request->companions as $companion) {
         EventUserCompanion::create([
           'event_id' => $request->event_id,
@@ -62,7 +70,15 @@ class EventUserController extends Controller
           'status' => $status,
           'attendance' => $attendance,
         ]);
+        $companionCount++;
       }
+
+      // LINE通知
+      $this->lineNotifyService->reserve(
+          $request->event_id, 
+          $request->user(),
+          $eventUser, 
+          $companionCount);
 
       return response($eventUser, 200);
     }
