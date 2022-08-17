@@ -28,9 +28,9 @@ class User extends Authenticatable
 
     public function getGenderNameAttribute()
     {
-        if($this->attributes['gender'] === 1) {
+        if($this->attributes['gender'] === 'men') {
             return '男性';
-        } else if($this->attributes['gender'] === 2) {
+        } else if($this->attributes['gender'] === 'women') {
             return '女性';
         } else {
             return 'その他';
@@ -39,9 +39,9 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        if($this->attributes['role_level'] === 1) {
+        if($this->attributes['role_level'] === 'system_admin') {
             return 'システム管理者';
-        } else if($this->attributes['role_level'] === 2) {
+        } else if($this->attributes['role_level'] === 'event_admin') {
             return 'イベント管理者';
         } else {
             return '一般ユーザー';
@@ -50,9 +50,9 @@ class User extends Authenticatable
 
     public function getStatusNameAttribute()
     {
-        if($this->attributes['status'] === 1) {
+        if($this->attributes['status'] === 'active') {
             return '有効';
-        } else if($this->attributes['status'] === 2) {
+        } else if($this->attributes['status'] === 'blacklist') {
             return 'ブラックリスト';
         } else {
             return 'その他';
