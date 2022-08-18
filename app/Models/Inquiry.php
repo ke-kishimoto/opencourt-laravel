@@ -12,4 +12,12 @@ class Inquiry extends Model
     use SoftDeletes;
 
     protected $table = "inquiries";
+
+    protected $fillable = [
+      'user_id',
+      'event_id',
+      'title',
+      'content',
+      'status',
+    ];
 }

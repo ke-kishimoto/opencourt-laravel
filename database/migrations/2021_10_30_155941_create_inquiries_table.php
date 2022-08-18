@@ -17,8 +17,9 @@ class CreateInquiriesTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->integer('event_id')->nullable();
-            $table->string('content');
-            $table->integer('status');
+            $table->string('title');
+            $table->text('content');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
         });
