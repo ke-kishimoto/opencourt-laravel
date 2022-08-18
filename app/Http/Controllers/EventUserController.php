@@ -106,6 +106,7 @@ class EventUserController extends Controller
 
     }
 
+    // 一括予約
     public function bulkResevation(Request $request)
     {
       foreach($request->event_ids as $eventId) {
@@ -124,6 +125,11 @@ class EventUserController extends Controller
           'attendance' => $attendance,
         ]);
       }
+
+      // LINE通知
+      $this->lineNotifyService->bulkReserve(
+        $request->user()->name, 
+        count($request->event_ids));
 
       return response([], 200);
 

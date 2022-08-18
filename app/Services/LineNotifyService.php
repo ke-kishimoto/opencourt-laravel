@@ -33,6 +33,13 @@ class LineNotifyService
       $this->lineNotify($msg);
     }
 
+    public function bulkReserve($userName, $count)
+    {
+      $msg = view('line.notify.bulkReserve', ['userName' => $userName, 'count' => $count,])
+      ->render();
+      $this->lineNotify($msg);
+    }
+
     // LINE通知用のfunction
     private function lineNotify($message) 
     {
