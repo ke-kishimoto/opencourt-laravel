@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('gender')->nullable();
             $table->integer('user_category_id')->nullable();
             $table->string('status');
-            $table->string('remark')->nullable();
+            $table->string('description')->nullable();
             $table->string('line_id')->nullable();
             $table->string('line_access_token')->nullable();
             $table->string('line_refresh_token')->nullable();
