@@ -18,8 +18,8 @@ class CreateEventUsersTable extends Migration
             $table->integer('event_id');
             $table->integer('user_id');
             $table->string('remark')->nullable();
-            $table->integer('status');
-            $table->integer('attendance');
+            $table->string('status');
+            $table->string('attendance');
             $table->integer('amount')->nullable();
             $table->string('amount_remark')->nullable();
             $table->timestamps();

@@ -20,7 +20,7 @@ class CreateEventTemplatesTable extends Migration
             $table->string('short_title');
             $table->string('place');
             $table->integer('limit_number');
-            $table->string('detail')->nullable();
+            $table->string('description')->nullable();
             $table->integer('price1')->nullable();
             $table->integer('price2')->nullable();
             $table->integer('price3')->nullable();

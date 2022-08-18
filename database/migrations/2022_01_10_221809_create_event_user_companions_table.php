@@ -17,10 +17,10 @@ class CreateEventUserCompanionsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('event_user_id');
             $table->integer('category_id');
-            $table->integer('gender');
+            $table->string('gender');
             $table->string('name');
-            $table->integer('status');
-            $table->integer('attendance');
+            $table->string('status');
+            $table->string('attendance');
             $table->integer('amount');
             $table->string('amount_remark');
             $table->timestamps();

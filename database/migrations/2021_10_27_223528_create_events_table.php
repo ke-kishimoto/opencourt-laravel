@@ -22,7 +22,7 @@ class CreateEventsTable extends Migration
             $table->string('end_time')->nullable();
             $table->string('place');
             $table->integer('limit_number')->nullable();
-            $table->string('detail')->nullable();
+            $table->string('description')->nullable();
             $table->integer('expenses')->nullable();
             $table->integer('amount')->nullable();
             $table->integer('number_of_user')->nullable();
