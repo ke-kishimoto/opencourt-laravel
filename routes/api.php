@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
+Route::get('lineLogin', [LoginLogoutController::class, 'lineLogin']);
 // Route::post('login', [LoginLogoutController::class, 'loginCheck']);
 // Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
 // Route::post('user/getList', [UserController::class, 'getUserList']);

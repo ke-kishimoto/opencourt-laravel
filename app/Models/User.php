@@ -28,6 +28,9 @@ class User extends Authenticatable
 
     public function getGenderNameAttribute()
     {
+        if(!array_key_exists('gender', $this->attributes)) {
+            return '未設定'; 
+        }
         if($this->attributes['gender'] === 'men') {
             return '男性';
         } else if($this->attributes['gender'] === 'women') {
