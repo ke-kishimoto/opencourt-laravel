@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Event;
+use App\Models\UserCategory;
 
 class LineMessagingService
 {
@@ -61,7 +62,7 @@ class LineMessagingService
     if ($text === '予約' || $text === 'キャンセル' || $text === '予約確認') {
       $data = $this->eventSelect($event, $text);
     } elseif ($text === '職種') {
-      $data = $this->occupationSelect($event);
+      $data = $this->categorySelect($event);
     } elseif ($text === '性別') {
       $data = $this->genderSelect($event);
     } elseif ($text === 'プロフィール確認') {
@@ -167,47 +168,58 @@ class LineMessagingService
     ]);
   }
 
-  // 職種選択 ボタンテンプレートVer
-  private function occupationSelect($event)
+  // postbackを受信した時
+  public function receivePostback($event, $channelAccessToken)
   {
+      $data = explode('&', $event['postback']['data']);
+      // 文字列から連想配列を作成
+      foreach($data as $item) {
+          $keyValue = explode('=', $item);
+          $data[$keyValue[0]] = $keyValue[1];    
+      }
+      if(isset($data['action']) && $data['action'] === 'profile') {
+          $this->profileRegist($event, $channelAccessToken, $data);
+      // } elseif(isset($data['action']) && $data['action'] === 'select') {
+      //     $this->eventDetail($event, $channelAccessToken, $data);
+      // } elseif(isset($data['action']) && ($data['action'] === 'reserve' || $data['action'] === 'cancel')) {
+      //     $this->eventReserveOrCancel($event, $channelAccessToken, $data);
+      }
+  }
+
+  // カテゴリ選択 ボタンテンプレートVer
+  private function categorySelect($event)
+  {
+    $categories = UserCategory::where('category_name', '<>', "''")
+                  ->orderBy('id')
+                  ->get();
+    $choices = [];
+    foreach($categories as $category) {
+      $choices[] = [
+        'type' => 'postback',
+        'label' => $category->category_name,
+        'data' => "action=profile&type=category&id={$category->id}",
+        'displayText' => $category->category_name
+      ];
+    }
+    $choices[] = [
+      'type' => 'postback',
+      'label' => '設定しない',
+      'data' => "action=profile&type=category&id=0",
+      'displayText' => '設定しない'
+    ];
+
     return json_encode([
       'replyToken' => "{$event['replyToken']}",
       'messages' =>
       [
         [
           "type" => "template",
-          "altText" => "職種選択",
+          "altText" => "カテゴリ選択",
           "template" =>
           [
             "type" => "buttons",
-            "text" => "職種を選択してください。（高校生以下の場合は高校生を選択してください）",
-            "actions" =>
-            [
-              [
-                'type' => 'postback',
-                'label' => '社会人',
-                'data' => "action=profile&type=occupation&id=1",
-                'displayText' => '社会人'
-              ],
-              [
-                'type' => 'postback',
-                'label' => '学生（大学・専門学校）',
-                'data' => "action=profile&type=occupation&id=2",
-                'displayText' => '学生（大学・専門学校）'
-              ],
-              [
-                'type' => 'postback',
-                'label' => '高校生',
-                'data' => "action=profile&type=occupation&id=3",
-                'displayText' => '高校生'
-              ],
-              [
-                'type' => 'postback',
-                'label' => '設定しない',
-                'data' => "action=profile&type=occupation&id=0",
-                'displayText' => '設定しない'
-              ],
-            ]
+            "text" => "カテゴリを選択してください。（高校生以下の場合は高校生を選択してください）",
+            "actions" => $choices
           ]
         ]
       ]
@@ -233,19 +245,19 @@ class LineMessagingService
               [
                 'type' => 'postback',
                 'label' => '男性',
-                'data' => "action=profile&type=sex&id=1",
+                'data' => "action=profile&type=gender&id=men",
                 'displayText' => '男性'
               ],
               [
                 'type' => 'postback',
                 'label' => '女性',
-                'data' => "action=profile&type=sex&id=2",
+                'data' => "action=profile&type=gender&id=women",
                 'displayText' => '女性'
               ],
               [
                 'type' => 'postback',
                 'label' => '設定しない',
-                'data' => "action=profile&type=sex&id=0",
+                'data' => "action=profile&type=gender&id=0",
                 'displayText' => '設定しない'
               ],
             ]
@@ -257,28 +269,14 @@ class LineMessagingService
 
   private function profileConfirmation($event)
   {
-    Log::debug('line_id', [$event['source']['userId']]);
     $user = User::where('line_id', $event['source']['userId'])->first();
-    Log::debug('user', [$user]);
-
-
-    $text = "表示名：{$user->name}";
-    // if($user['occupation'] == '1') {
-    //     $text .= "職種：社会人\n";
-    // } elseif($user['occupation'] == '2') {
-    //     $text .= "職種：学生\n";
-    // } elseif($user['occupation'] == '3') {
-    //     $text .= "職種：高校生\n";
-    // } else {
-    //     $text .= "職種：未設定\n";
-    // }
-    // if($user['sex'] == '1') {
-    //     $text .= "性別：男性";
-    // } elseif($user['sex'] == '2') {
-    //     $text .= "性別：女性";
-    // } else {
-    //     $text .= "性別：未設定";
-    // }
+    $category = UserCategory::find($user->user_category_id);
+    $text = view('line.message.profile', 
+        [
+          'user'=> $user, 
+          'category' => !empty($category) ? $category->category_name : ''
+        ])
+        ->render();
 
     return json_encode([
       'replyToken' => "{$event['replyToken']}",
@@ -303,6 +301,47 @@ class LineMessagingService
       ]
     ]);
   }
+
+  private function profileRegist($event, $channelAccessToken, $data)
+    {
+        if($data['id'] == 0) {
+            return;
+        }
+
+        $user = User::where('line_id', $event['source']['userId'])->first();
+        if($data['type'] === 'category' && $data['id'] != 0) {
+            $user->user_category_id = $data['id'];
+        }
+        if($data['type'] === 'gender' && $data['id'] != 0) {
+            $user->gender = $data['id'];
+        }
+        $user->save();
+        $text = '登録完了しました。';
+
+        // 完了メッセージ送信
+        $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
+        $ch = curl_init($url);
+        $headers = array(
+            "Content-Type: application/json",
+            "Authorization: Bearer {$channelAccessToken}"
+        );
+        $data = json_encode([
+            'replyToken' => "{$event['replyToken']}",
+            'messages' => [
+                [
+                    'type' => 'text',
+                    'text' => $text,                            
+                ]
+            ]
+        ]);
+        curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
+
+        curl_exec($ch);
+        curl_close($ch);
+    }
 
 
   private function getEventInfoShort($event)
