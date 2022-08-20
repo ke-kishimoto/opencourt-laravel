@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Services\LineMessagingService;
 
@@ -17,12 +18,12 @@ class LineController extends Controller
    // webhook
    public function webhook(Request $request)
    {
+
       // webhookリクエストを受け取る
       $json = file_get_contents("php://input");
       $contents = json_decode($json, true);
       $events = $contents['events'];
-      // $events = $request->events;
-    
+
        // 署名の検証
        // $httpHeaders = getallheaders();
        // $lineSignature = $httpHeaders["X-Line-Signature"];
@@ -55,6 +56,11 @@ class LineController extends Controller
            if(isset($event['message']) && $event['message']['type'] === 'text') {
             $this->lineMessagingService->receiveMessageText($event, env('LINE_MESSAGING_API_CHANNEL_ACCESS_TOKEN'));
            }
+
+           // 返信があった場合
+           if(isset($event['postback'])) {
+            $this->lineMessagingService->receivePostback($event, env('LINE_MESSAGING_API_CHANNEL_ACCESS_TOKEN'));
+        }
            
        }
 

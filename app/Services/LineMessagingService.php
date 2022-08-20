@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\UserCategory;
@@ -53,12 +55,6 @@ class LineMessagingService
   public function receiveMessageText($event, $channelAccessToken)
   {
     $text = $event['message']['text'];
-    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
-    $ch = curl_init($url);
-    $headers = array(
-      "Content-Type: application/json",
-      "Authorization: Bearer {$channelAccessToken}"
-    );
     // dataの取得
     if ($text === '予約' || $text === 'キャンセル' || $text === '予約確認') {
       $data = $this->eventSelect($event, $text);
@@ -71,14 +67,9 @@ class LineMessagingService
     } else {
       $data = $this->atherMessage($event);
     }
-    // リクエストの送信
-    curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
-    $result = json_decode(curl_exec($ch));
-    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);  // ステータスコードを受け取る
-    curl_close($ch);
+    $response = Http::withToken($channelAccessToken)
+    ->post('https://api.line.me/v2/bot/message/reply', $data);
+
   }
 
   // イベント選択時 カルーセルVer
@@ -117,7 +108,7 @@ class LineMessagingService
             ->where('event_users.user_id', $user->id);
         })->get();
       if (!$eventList) {
-        return json_encode([
+        return [
           'replyToken' => "{$event['replyToken']}",
           'messages' => [
             [
@@ -125,7 +116,7 @@ class LineMessagingService
               'text' => '予約されたイベントはありません。',
             ]
           ]
-        ]);
+        ];
       }
       if ($text === 'キャンセル') {
         $mode = 'cancel';
@@ -154,7 +145,7 @@ class LineMessagingService
     }
 
     // 応答メッセージを返す // カルーセルVer
-    return json_encode([
+    return [
       'replyToken' => "{$event['replyToken']}",
       'messages' => [
         [
@@ -166,14 +157,17 @@ class LineMessagingService
           ]
         ]
       ]
-    ]);
+    ];
   }
 
   // postbackを受信した時
   public function receivePostback($event, $channelAccessToken)
   {
     $data = explode('&', $event['postback']['data']);
-    Log::debug($data);
+
+    if(strpos($data[0], 'richmenu-changed') !== false) {
+      return;
+    }
     // 文字列から連想配列を作成
     foreach ($data as $item) {
       $keyValue = explode('=', $item);
@@ -184,7 +178,7 @@ class LineMessagingService
     } elseif (isset($data['action']) && $data['action'] === 'select') {
       $this->eventDetail($event, $channelAccessToken, $data);
     } elseif (isset($data['action']) && ($data['action'] === 'reserve' || $data['action'] === 'cancel')) {
-      //     $this->eventReserveOrCancel($event, $channelAccessToken, $data);
+      $this->eventReserveOrCancel($event, $channelAccessToken, $data);
     }
   }
 
@@ -210,7 +204,7 @@ class LineMessagingService
       'displayText' => '設定しない'
     ];
 
-    return json_encode([
+    return [
       'replyToken' => "{$event['replyToken']}",
       'messages' =>
       [
@@ -225,13 +219,13 @@ class LineMessagingService
           ]
         ]
       ]
-    ]);
+    ];
   }
 
   // 性別の選択　ボタンテンプレートVer
   private function genderSelect($event)
   {
-    return json_encode([
+    return [
       'replyToken' => "{$event['replyToken']}",
       'messages' =>
       [
@@ -266,7 +260,7 @@ class LineMessagingService
           ]
         ]
       ]
-    ]);
+    ];
   }
 
   private function profileConfirmation($event)
@@ -282,7 +276,7 @@ class LineMessagingService
     )
       ->render();
 
-    return json_encode([
+    return [
       'replyToken' => "{$event['replyToken']}",
       'messages' => [
         [
@@ -290,12 +284,12 @@ class LineMessagingService
           'text' => $text,
         ]
       ]
-    ]);
+    ];
   }
 
   public function atherMessage($event)
   {
-    return json_encode([
+    return [
       'replyToken' => "{$event['replyToken']}",
       'messages' => [
         [
@@ -303,7 +297,7 @@ class LineMessagingService
           'text' => '恐れ入りますが送信されたメッセージには対応しておりません。',
         ]
       ]
-    ]);
+    ];
   }
 
   private function profileRegist($event, $channelAccessToken, $data)
@@ -322,29 +316,18 @@ class LineMessagingService
     $user->save();
     $text = '登録完了しました。';
 
-    // 完了メッセージ送信
-    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
-    $ch = curl_init($url);
-    $headers = array(
-      "Content-Type: application/json",
-      "Authorization: Bearer {$channelAccessToken}"
-    );
-    $data = json_encode([
-      'replyToken' => "{$event['replyToken']}",
-      'messages' => [
+    // // 完了メッセージ送信
+    $response = Http::withToken($channelAccessToken)
+    ->post('https://api.line.me/v2/bot/message/reply', [
+        'replyToken' => "{$event['replyToken']}",
+        'messages' => [
         [
           'type' => 'text',
           'text' => $text,
         ]
       ]
     ]);
-    curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
 
-    curl_exec($ch);
-    curl_close($ch);
   }
 
   private function eventDetail($event, $channelAccessToken, $data)
@@ -355,14 +338,16 @@ class LineMessagingService
     $categories = UserCategory::where('category_name', '<>', "''")
       ->orderBy('id')
       ->get();
-    $info = view('line.message.eventInfo', 
-    [
-      'event' => $eventInfo,
-      'category_name1' => isset($categories[0]) ? $categories[0]->category_name : '',
-      'category_name2' => isset($categories[1]) ? $categories[1]->category_name : '',
-      'category_name3' => isset($categories[2]) ? $categories[2]->category_name : '',
-    ])
-    ->render();
+    $info = view(
+      'line.message.eventInfo',
+      [
+        'event' => $eventInfo,
+        'category_name1' => isset($categories[0]) ? $categories[0]->category_name : '',
+        'category_name2' => isset($categories[1]) ? $categories[1]->category_name : '',
+        'category_name3' => isset($categories[2]) ? $categories[2]->category_name : '',
+      ]
+    )
+      ->render();
 
     if ($data['mode'] === 'reserve') {
       if ($eventInfo->limit_number <= $joinCount) {
@@ -373,14 +358,6 @@ class LineMessagingService
     } elseif ($data['mode'] === 'cancel') {
       $text = "キャンセルしますか？";
     }
-
-    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
-
-    $ch = curl_init($url);
-    $headers = array(
-      "Content-Type: application/json",
-      "Authorization: Bearer {$channelAccessToken}"
-    );
 
     $body = [
       'replyToken' => "{$event['replyToken']}",
@@ -449,10 +426,118 @@ class LineMessagingService
       ];
     }
 
-    $body = json_encode($body);
+    $response = Http::withToken($channelAccessToken)
+    ->post('https://api.line.me/v2/bot/message/reply', $body);
+
+  }
+
+  private function eventReserveOrCancel($event, $channelAccessToken, $data)
+  {
+    $eventInfo = Event::find($data['id']);
+    $user = User::where('line_id', $event['source']['userId'])->first();
+    // $participant = [];
+    // $participant['game_id'] = $data['id'];
+    // $participant['occupation'] = $user['occupation'];
+    // $participant['sex'] = $user['sex'];
+    // $participant['name'] = $user['name'];
+    // $participant['email'] = $user['email'] ?? '';
+    // $participant['tel'] = $user['tel'];
+    // $participant['remark'] = $user['remark'];
+    // $participant['line_id'] = $user['line_id'];
+
+    if (empty($user->user_category_id) || empty($user->gender)) {
+      $text = 'プロフィールに未設定の項目があるため更新できません。プロフィール設定から設定を行ってください。';
+    } else {
+      if ($data['action'] === 'reserve') {
+
+        Log::debug('予約開始前');
+
+
+        // $request = new Request([], [
+        //   'event_id' => $eventInfo->id,
+        //   'event_user_id' => $user->id,
+        //   'remark' => '',
+        //   'companions' => [],
+        // ]);
+        $request = Request::create("/", "POST", [
+          'event_id' => $eventInfo->id,
+          'user_id' => $user->id,
+          'remark' => '',
+          'companions' => [],
+        ]);
+        $request->setUserResolver(function() use ($user) {
+          return $user;
+        });
+        Log::debug('request', [$request]);
+
+        $controller = app()->make('App\Http\Controllers\EventUserController');
+        $controller->create($request);
+
+        $text = view('line.message.reserve', 
+        [
+          'event' => $eventInfo,
+        ]
+        )->render();
+
+        // // 予約の場合
+        // $result = $detailDao->existsCheck($gameInfo['id'], '', $user['line_id']);
+        // if($result['result']) {
+        //     $text = '既に予約済みのため予約できません。';
+        // } else {
+        //     if($data['douhan'] === 'no') {
+        //     $eventService->oneParticipantRegist($participant, [] , EventService::MODE_LINE);
+        //         $lineApi = new LineApi();
+        //         $text = $lineApi->createReservationMessage($gameInfo['title'], $gameInfo['game_date'], $gameInfo['start_time']);
+        //     } elseif($data['douhan'] === 'yes' && !isset($data['num'])) {
+        //         $this->addDouhan($event, $channelAccessToken, $data['id']);
+        //         return ;
+        //     } elseif($data['douhan'] === 'yes' && isset($data['num'])) {
+        //         $num = (int)$data['num'];
+        //         $companion = [];
+        //         for($i = 1; $i <= $num; $i++) {
+        //             $companion[] = 
+        //             [
+        //                 'occupation' => $participant['occupation'],
+        //                 'sex' => $participant['sex'],
+        //                 'name' => "同伴{$i}({$participant['name']})"
+        //             ];
+        //         }
+        //         $eventService->oneParticipantRegist($participant, $companion , EventService::MODE_LINE );
+        //         $lineApi = new LineApi();
+        //         $text = $lineApi->createReservationMessage($gameInfo['title'], $gameInfo['game_date'], $gameInfo['start_time']);
+        //     }
+        // }
+      } elseif ($data['action'] === 'cancel') {
+        // キャンセル
+
+        // $msg = $eventService->cancelComplete($participant, '', $user['id'] , EventService::MODE_LINE );
+        //   $lineApi = new LineApi();
+        //   if(!empty($msg)) {
+        //       $text = $msg;
+        //   } else {  
+        //       $text = $lineApi->createCancelMessage($gameInfo['title'], $gameInfo['game_date']);
+        //   }
+      }
+    }
+    // 完了メッセージ送信
+    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
+    $ch = curl_init($url);
+    $headers = array(
+      "Content-Type: application/json",
+      "Authorization: Bearer {$channelAccessToken}"
+    );
+    $data = json_encode([
+      'replyToken' => "{$event['replyToken']}",
+      'messages' => [
+        [
+          'type' => 'text',
+          'text' => $text,
+        ]
+      ]
+    ]);
     curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, ($body)); //データをセット
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
 
     curl_exec($ch);

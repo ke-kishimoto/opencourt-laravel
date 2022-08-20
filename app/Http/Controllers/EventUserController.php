@@ -43,6 +43,7 @@ class EventUserController extends Controller
 
     public function create(Request $request)
     {
+      Log::debug('event create');
       // TODO-イベントの状態によって判断
       $status = 'participation';
       if ($status === 'participation') {
