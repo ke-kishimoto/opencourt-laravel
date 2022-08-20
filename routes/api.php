@@ -66,13 +66,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
-Route::get('lineLogin', [LoginLogoutController::class, 'lineLogin']);
-// Route::post('login', [LoginLogoutController::class, 'loginCheck']);
-// Route::post('eventTemplate/delete/{id}', [EventTemplateController::class, 'delete']);
-// Route::post('user/getList', [UserController::class, 'getUserList']);
-// Route::get('userDetail/{id}', [UserController::class, 'get']);
-// Route::post('userDetail/{id}/blacklist', [UserController::class, 'updateBlacklist']);
-// Route::post('userDetail/{id}/authority', [UserController::class, 'updateAuthority']);
-// Route::get('user/categories',[UserController::class, 'fetchUserCategories']);
-// Route::post('event/getList', [EventController::class, 'getEventList']);
-// Route::get('eventDetail/{id}', [EventController::class, 'get']);
+Route::post('lineLogin/{code}', [LoginLogoutController::class, 'lineLogin']);

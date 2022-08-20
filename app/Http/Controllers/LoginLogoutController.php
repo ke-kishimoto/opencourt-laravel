@@ -51,10 +51,8 @@ class LoginLogoutController extends Controller
       ], 400);
     }
 
-    public function lineLogin(Request $request)
+    public function lineLogin($code)
     {
-        $code = $request->code;
-
         Log::debug($code);
 
         // アクセストークン取得
