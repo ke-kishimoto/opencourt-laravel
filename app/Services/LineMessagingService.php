@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\UserCategory;
+use App\Models\EventUser;
 
 class LineMessagingService
 {
@@ -171,29 +172,30 @@ class LineMessagingService
   // postbackを受信した時
   public function receivePostback($event, $channelAccessToken)
   {
-      $data = explode('&', $event['postback']['data']);
-      // 文字列から連想配列を作成
-      foreach($data as $item) {
-          $keyValue = explode('=', $item);
-          $data[$keyValue[0]] = $keyValue[1];    
-      }
-      if(isset($data['action']) && $data['action'] === 'profile') {
-          $this->profileRegist($event, $channelAccessToken, $data);
-      // } elseif(isset($data['action']) && $data['action'] === 'select') {
-      //     $this->eventDetail($event, $channelAccessToken, $data);
-      // } elseif(isset($data['action']) && ($data['action'] === 'reserve' || $data['action'] === 'cancel')) {
+    $data = explode('&', $event['postback']['data']);
+    Log::debug($data);
+    // 文字列から連想配列を作成
+    foreach ($data as $item) {
+      $keyValue = explode('=', $item);
+      $data[$keyValue[0]] = $keyValue[1];
+    }
+    if (isset($data['action']) && $data['action'] === 'profile') {
+      $this->profileRegist($event, $channelAccessToken, $data);
+    } elseif (isset($data['action']) && $data['action'] === 'select') {
+      $this->eventDetail($event, $channelAccessToken, $data);
+    } elseif (isset($data['action']) && ($data['action'] === 'reserve' || $data['action'] === 'cancel')) {
       //     $this->eventReserveOrCancel($event, $channelAccessToken, $data);
-      }
+    }
   }
 
   // カテゴリ選択 ボタンテンプレートVer
   private function categorySelect($event)
   {
     $categories = UserCategory::where('category_name', '<>', "''")
-                  ->orderBy('id')
-                  ->get();
+      ->orderBy('id')
+      ->get();
     $choices = [];
-    foreach($categories as $category) {
+    foreach ($categories as $category) {
       $choices[] = [
         'type' => 'postback',
         'label' => $category->category_name,
@@ -271,12 +273,14 @@ class LineMessagingService
   {
     $user = User::where('line_id', $event['source']['userId'])->first();
     $category = UserCategory::find($user->user_category_id);
-    $text = view('line.message.profile', 
-        [
-          'user'=> $user, 
-          'category' => !empty($category) ? $category->category_name : ''
-        ])
-        ->render();
+    $text = view(
+      'line.message.profile',
+      [
+        'user' => $user,
+        'category' => !empty($category) ? $category->category_name : ''
+      ]
+    )
+      ->render();
 
     return json_encode([
       'replyToken' => "{$event['replyToken']}",
@@ -303,45 +307,157 @@ class LineMessagingService
   }
 
   private function profileRegist($event, $channelAccessToken, $data)
-    {
-        if($data['id'] == 0) {
-            return;
-        }
-
-        $user = User::where('line_id', $event['source']['userId'])->first();
-        if($data['type'] === 'category' && $data['id'] != 0) {
-            $user->user_category_id = $data['id'];
-        }
-        if($data['type'] === 'gender' && $data['id'] != 0) {
-            $user->gender = $data['id'];
-        }
-        $user->save();
-        $text = '登録完了しました。';
-
-        // 完了メッセージ送信
-        $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
-        $ch = curl_init($url);
-        $headers = array(
-            "Content-Type: application/json",
-            "Authorization: Bearer {$channelAccessToken}"
-        );
-        $data = json_encode([
-            'replyToken' => "{$event['replyToken']}",
-            'messages' => [
-                [
-                    'type' => 'text',
-                    'text' => $text,                            
-                ]
-            ]
-        ]);
-        curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
-
-        curl_exec($ch);
-        curl_close($ch);
+  {
+    if ($data['id'] == 0) {
+      return;
     }
+
+    $user = User::where('line_id', $event['source']['userId'])->first();
+    if ($data['type'] === 'category' && $data['id'] != 0) {
+      $user->user_category_id = $data['id'];
+    }
+    if ($data['type'] === 'gender' && $data['id'] != 0) {
+      $user->gender = $data['id'];
+    }
+    $user->save();
+    $text = '登録完了しました。';
+
+    // 完了メッセージ送信
+    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
+    $ch = curl_init($url);
+    $headers = array(
+      "Content-Type: application/json",
+      "Authorization: Bearer {$channelAccessToken}"
+    );
+    $data = json_encode([
+      'replyToken' => "{$event['replyToken']}",
+      'messages' => [
+        [
+          'type' => 'text',
+          'text' => $text,
+        ]
+      ]
+    ]);
+    curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
+
+    curl_exec($ch);
+    curl_close($ch);
+  }
+
+  private function eventDetail($event, $channelAccessToken, $data)
+  {
+    // イベントの詳細情報を表示する
+    $eventInfo = Event::find($data['id']);
+    $joinCount = EventUser::where('event_id', $eventInfo->id)->count();
+    $categories = UserCategory::where('category_name', '<>', "''")
+      ->orderBy('id')
+      ->get();
+    $info = view('line.message.eventInfo', 
+    [
+      'event' => $eventInfo,
+      'category_name1' => isset($categories[0]) ? $categories[0]->category_name : '',
+      'category_name2' => isset($categories[1]) ? $categories[1]->category_name : '',
+      'category_name3' => isset($categories[2]) ? $categories[2]->category_name : '',
+    ])
+    ->render();
+
+    if ($data['mode'] === 'reserve') {
+      if ($eventInfo->limit_number <= $joinCount) {
+        $text = "予約しますか？（キャンセル待ち）";
+      } else {
+        $text = "予約しますか？";
+      }
+    } elseif ($data['mode'] === 'cancel') {
+      $text = "キャンセルしますか？";
+    }
+
+    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
+
+    $ch = curl_init($url);
+    $headers = array(
+      "Content-Type: application/json",
+      "Authorization: Bearer {$channelAccessToken}"
+    );
+
+    $body = [
+      'replyToken' => "{$event['replyToken']}",
+      'messages' =>
+      [
+        [
+          'type' => 'text',
+          'text' => $info,
+        ]
+      ]
+    ];
+
+    if ($data['mode'] === 'reserve') {
+      $body['messages'][] = [
+        "type" => "template",
+        "altText" => "予約確認",
+        "template" =>
+        [
+          "type" => "buttons",
+          "text" => "{$text}",
+          "actions" =>
+          [
+            [
+              'type' => 'postback',
+              'label' => '予約する',
+              'data' => "action={$data['mode']}&id={$eventInfo->id}&douhan=no",
+              'displayText' => '予約する'
+            ],
+            [
+              'type' => 'postback',
+              'label' => '同伴者を追加して予約する',
+              'data' => "action={$data['mode']}&id={$eventInfo->id}&douhan=yes",
+              'displayText' => '同伴者を追加して予約する'
+            ],
+            [
+              'type' => 'postback',
+              'label' => '予約しない',
+              'data' => "action=no&id={$eventInfo->id}",
+              'displayText' => '予約しない'
+            ],
+          ]
+        ]
+      ];
+    } elseif ($data['mode'] === 'cancel') {
+      $body['messages'][] = [
+        'type' => 'template',
+        'altText' => 'キャンセル確認',
+        'template' => [
+          "type" => "confirm",
+          "text" => $text,
+          "actions" => [
+            [
+              'type' => 'postback',
+              'label' => 'する',
+              'data' => "action={$data['mode']}&id={$eventInfo->id}",
+              'displayText' => 'する'
+            ],
+            [
+              'type' => 'postback',
+              'label' => 'しない',
+              'data' => "action=no&id={$eventInfo->id}",
+              'displayText' => 'しない'
+            ]
+          ],
+        ]
+      ];
+    }
+
+    $body = json_encode($body);
+    curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, ($body)); //データをセット
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
+
+    curl_exec($ch);
+    curl_close($ch);
+  }
 
 
   private function getEventInfoShort($event)
