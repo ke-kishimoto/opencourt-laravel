@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventUserController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\LineController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,3 +68,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::post('login', [LoginLogoutController::class, 'login']);
 Route::post('lineLogin/{code}', [LoginLogoutController::class, 'lineLogin']);
+Route::post('webhook', [LineController::class, 'webhook']);

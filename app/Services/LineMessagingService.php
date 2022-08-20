@@ -15,7 +15,7 @@ class LineMessagingService
   // 友達追加された時の処理
   public function addFriend($event, $channelAccessToken)
   {
-    $user = User::where('line_id', ($event['source']['userId']));
+    $user = User::where('line_id', ($event['source']['userId']))->first();
     if (!$user) {
       // ユーザーが存在しない場合は登録する
       $user = new User();
@@ -39,7 +39,8 @@ class LineMessagingService
   // ブロックされた時の処理（友達解除された時）
   public function unfollow($event)
   {
-    $user = User::where('line_id', ($event['source']['userId']));
+    Log::debug('ユーザー削除');
+    $user = User::where('line_id', ($event['source']['userId']))->first();
     if ($user) {
       // ユーザーを削除する
       $user->delete();
@@ -81,7 +82,7 @@ class LineMessagingService
   // イベント選択時 カルーセルVer
   private function eventSelect($event, $text)
   {
-    $user = User::where('line_id', ($event['source']['userId']));
+    $user = User::where('line_id', ($event['source']['userId']))->first();
     if ($text === '予約') {
       // $eventList = $gameInfoDao->getGameInfoListByAfterDate(date('Y-m-d'), '', $event['source']['userId']);
 
@@ -90,7 +91,7 @@ class LineMessagingService
           $query->select(DB::raw(1))
             ->from('event_users')
             ->whereColumn('event_users.event_id', 'events.id')
-            ->whereColumn('event_users.user_id', $user->id);
+            ->where('event_users.user_id', $user->id);
         })->get();
       if (!$eventList) {
         return json_encode([
@@ -111,7 +112,7 @@ class LineMessagingService
           $query->select(DB::raw(1))
             ->from('event_users')
             ->whereColumn('event_users.event_id', 'events.id')
-            ->whereColumn('event_users.user_id', $user->id);
+            ->where('event_users.user_id', $user->id);
         })->get();
       if (!$eventList) {
         return json_encode([
@@ -256,7 +257,10 @@ class LineMessagingService
 
   private function profileConfirmation($event)
   {
-    $user = User::where('line_id', ($event['source']['userId']));
+    Log::debug('line_id', [$event['source']['userId']]);
+    $user = User::where('line_id', $event['source']['userId'])->first();
+    Log::debug('user', [$user]);
+
 
     $text = "表示名：{$user->name}";
     // if($user['occupation'] == '1') {
