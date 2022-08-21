@@ -50,16 +50,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/event', [EventController::class, 'create']);
   Route::put('/event', [EventController::class, 'update']);
   Route::delete('/event/{id}', [EventController::class, 'delete']);
-  Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
   Route::get('searchEvent', [EventController::class, 'search']);
-
+  
   // イベント参加者
   Route::get('/getEventUser/{id}', [EventUserController::class, 'getEventUser']);
   Route::post('/eventUser', [EventUserController::class, 'create']);
   Route::delete('/eventUser/{eventId}', [EventUserController::class, 'delete']);
   Route::get('getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
   Route::post('bulkResevation', [EventUserController::class, 'bulkResevation']);
-
+  
   // ニュース
   Route::post('/news', [NewsController::class, 'create']);
   Route::get('/getAllNews', [NewsController::class, 'getAllNews']);
@@ -69,3 +68,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::post('login', [LoginLogoutController::class, 'login']);
 Route::post('lineLogin/{code}', [LoginLogoutController::class, 'lineLogin']);
 Route::post('webhook', [LineController::class, 'webhook']);
+Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
