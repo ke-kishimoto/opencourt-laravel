@@ -15,6 +15,7 @@ class CreateEventUserCompanionsTable extends Migration
     {
         Schema::create('event_user_companions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('event_id');
             $table->integer('event_user_id');
             $table->integer('category_id');
             $table->string('gender');
