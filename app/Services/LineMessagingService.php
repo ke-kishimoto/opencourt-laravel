@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\UserCategory;
 use App\Models\EventUser;
-use Illuminate\Database\Console\Migrations\StatusCommand;
 
 class LineMessagingService
 {
@@ -78,14 +77,13 @@ class LineMessagingService
   {
     $user = User::where('line_id', ($event['source']['userId']))->first();
     if ($text === '予約') {
-      // $eventList = $gameInfoDao->getGameInfoListByAfterDate(date('Y-m-d'), '', $event['source']['userId']);
-
       $eventList = Event::where('event_date', '>=', date('Y-m-d'))
         ->whereNotExists(function ($query) use ($user) {
           $query->select(DB::raw(1))
             ->from('event_users')
             ->whereColumn('event_users.event_id', 'events.id')
-            ->where('event_users.user_id', $user->id);
+            ->where('event_users.user_id', $user->id)
+            ->whereNull('event_users.deleted_at');
         })->get();
       if (count($eventList) === 0) {
         return [
@@ -106,9 +104,10 @@ class LineMessagingService
           $query->select(DB::raw(1))
             ->from('event_users')
             ->whereColumn('event_users.event_id', 'events.id')
-            ->where('event_users.user_id', $user->id);
+            ->where('event_users.user_id', $user->id)
+            ->whereNull('event_users.deleted_at');
         })->get();
-      if (!$eventList) {
+      if (count($eventList) === 0) {
         return [
           'replyToken' => "{$event['replyToken']}",
           'messages' => [
@@ -434,15 +433,6 @@ class LineMessagingService
   {
     $eventInfo = Event::find($data['id']);
     $user = User::where('line_id', $event['source']['userId'])->first();
-    // $participant = [];
-    // $participant['game_id'] = $data['id'];
-    // $participant['occupation'] = $user['occupation'];
-    // $participant['sex'] = $user['sex'];
-    // $participant['name'] = $user['name'];
-    // $participant['email'] = $user['email'] ?? '';
-    // $participant['tel'] = $user['tel'];
-    // $participant['remark'] = $user['remark'];
-    // $participant['line_id'] = $user['line_id'];
 
     if (empty($user->user_category_id) || empty($user->gender)) {
       $text = 'プロフィールに未設定の項目があるため更新できません。プロフィール設定から設定を行ってください。';
@@ -492,44 +482,17 @@ class LineMessagingService
           $text = $response->content();
         }
 
-        // // 予約の場合
-        // $result = $detailDao->existsCheck($gameInfo['id'], '', $user['line_id']);
-        // if($result['result']) {
-        //     $text = '既に予約済みのため予約できません。';
-        // } else {
-        //     if($data['douhan'] === 'no') {
-        //     $eventService->oneParticipantRegist($participant, [] , EventService::MODE_LINE);
-        //         $lineApi = new LineApi();
-        //         $text = $lineApi->createReservationMessage($gameInfo['title'], $gameInfo['game_date'], $gameInfo['start_time']);
-        //     } elseif($data['douhan'] === 'yes' && !isset($data['num'])) {
-        //         $this->addDouhan($event, $channelAccessToken, $data['id']);
-        //         return ;
-        //     } elseif($data['douhan'] === 'yes' && isset($data['num'])) {
-        //         $num = (int)$data['num'];
-        //         $companion = [];
-        //         for($i = 1; $i <= $num; $i++) {
-        //             $companion[] = 
-        //             [
-        //                 'occupation' => $participant['occupation'],
-        //                 'sex' => $participant['sex'],
-        //                 'name' => "同伴{$i}({$participant['name']})"
-        //             ];
-        //         }
-        //         $eventService->oneParticipantRegist($participant, $companion , EventService::MODE_LINE );
-        //         $lineApi = new LineApi();
-        //         $text = $lineApi->createReservationMessage($gameInfo['title'], $gameInfo['game_date'], $gameInfo['start_time']);
-        //     }
-        // }
       } elseif ($data['action'] === 'cancel') {
         // キャンセル
+        $request = Request::create("/", "DELETE", []);
+        $request->setUserResolver(function () use ($user) {
+          return $user;
+        });
 
-        // $msg = $eventService->cancelComplete($participant, '', $user['id'] , EventService::MODE_LINE );
-        //   $lineApi = new LineApi();
-        //   if(!empty($msg)) {
-        //       $text = $msg;
-        //   } else {  
-        //       $text = $lineApi->createCancelMessage($gameInfo['title'], $gameInfo['game_date']);
-        //   }
+        $controller = app()->make('App\Http\Controllers\EventUserController');
+        $response = $controller->delete($request, $eventInfo->id);
+        $text = view('line.message.cancel', ['event' => $eventInfo])->render();
+
       }
     }
     // 完了メッセージ送信
