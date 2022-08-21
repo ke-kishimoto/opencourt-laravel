@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Models\EventUser;
 use App\Models\EventUserCompanion;
 use App\Services\LineNotifyService;
-
-// TODO-トランザクション追加
 
 class EventUserController extends Controller
 {
@@ -43,46 +42,58 @@ class EventUserController extends Controller
 
     public function create(Request $request)
     {
-      Log::debug('event create');
-      // TODO-イベントの状態によって判断
-      $status = 'participation';
-      if ($status === 'participation') {
-        $attendance = 'attendance';
-      } else {
-        $attendance = 'absence';
+
+      $eventUser = EventUser::where('event_id', $request->event_id)
+      ->where('user_id', $request->user_id)
+      ->first();
+
+      if($eventUser) {
+        return response('予約が重複しています', 400);
       }
 
-      $eventUser = EventUser::create([
-        'event_id' => $request->event_id,
-        'user_id' => $request->user_id,
-        'remark' => $request->remark,
-        'status' => $status,
-        'attendance' => $attendance,
-      ]);
+      DB::transaction(function () use ($request) {
 
-      // 同伴者の登録
-      $companionCount = 0;
-      foreach($request->companions as $companion) {
-        EventUserCompanion::create([
+        // TODO-イベントの状態によって判断
+        $status = 'participation';
+        if ($status === 'participation') {
+          $attendance = 'attendance';
+        } else {
+          $attendance = 'absence';
+        }
+  
+        $eventUser = EventUser::create([
           'event_id' => $request->event_id,
-          'event_user_id' => $eventUser->id,
-          'name' => $companion['name'],
-          'user_category_id' => $companion['category'],
-          'gender' => $companion['gender'],
+          'user_id' => $request->user_id,
+          'remark' => $request->remark,
           'status' => $status,
           'attendance' => $attendance,
         ]);
-        $companionCount++;
-      }
+  
+        // 同伴者の登録
+        $companionCount = 0;
+        foreach($request->companions as $companion) {
+          EventUserCompanion::create([
+            'event_id' => $request->event_id,
+            'event_user_id' => $eventUser->id,
+            'name' => $companion['name'],
+            'user_category_id' => $companion['category'],
+            'gender' => $companion['gender'],
+            'status' => $status,
+            'attendance' => $attendance,
+          ]);
+          $companionCount++;
+        }
+  
+        // LINE通知
+        $this->lineNotifyService->reserve(
+            $request->event_id, 
+            $request->user(),
+            $eventUser, 
+            $companionCount);
+      });
 
-      // LINE通知
-      $this->lineNotifyService->reserve(
-          $request->event_id, 
-          $request->user(),
-          $eventUser, 
-          $companionCount);
 
-      return response($eventUser, 200);
+      return response([], 200);
     }
 
     // 参加のキャンセル
@@ -92,11 +103,13 @@ class EventUserController extends Controller
       ->where('user_id', $request->user()->id)
       ->first();
 
-      // 同伴者キャンセル
-      EventUserCompanion::where('event_user_id', $eventUser->id)->delete();
-
-      // ユーザーのキャンセル
-      $eventUser->delete();
+      DB::transaction(function () use ($eventUser) {
+        // 同伴者キャンセル
+        EventUserCompanion::where('event_user_id', $eventUser->id)->delete();
+  
+        // ユーザーのキャンセル
+        $eventUser->delete();
+      });
 
       // LINE通知
       $this->lineNotifyService->cancel(

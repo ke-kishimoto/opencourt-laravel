@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\UserCategory;
 use App\Models\EventUser;
+use Illuminate\Database\Console\Migrations\StatusCommand;
 
 class LineMessagingService
 {
@@ -26,16 +27,18 @@ class LineMessagingService
       $user->role_level = 'general';
       $user->line_id = $event['source']['userId'];
 
-      // プロフィール取得
-      $url = "https://api.line.me/v2/bot/profile/{$event['source']['userId']}"; // リプライ
-      $ch = curl_init($url);
-      $headers = array(
-        "Authorization: Bearer {$channelAccessToken}"
-      );
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
-      $result = json_decode(curl_exec($ch));
-      $user->name = isset($result->displayName) ? $result->displayName : '';
+      // // プロフィール取得
+      // $url = "https://api.line.me/v2/bot/profile/{$event['source']['userId']}"; // リプライ
+      // $ch = curl_init($url);
+      // $headers = array(
+      //   "Authorization: Bearer {$channelAccessToken}"
+      // );
+      // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
+      // $result = json_decode(curl_exec($ch));
+      $result = Http::withToken($channelAccessToken)
+      ->get('https://api.line.me/v2/bot/message/reply');
+      $user->name = isset($result['displayName']) ? $result['displayName'] : '';
       $user->save();
     }
   }
@@ -43,7 +46,6 @@ class LineMessagingService
   // ブロックされた時の処理（友達解除された時）
   public function unfollow($event)
   {
-    Log::debug('ユーザー削除');
     $user = User::where('line_id', ($event['source']['userId']))->first();
     if ($user) {
       // ユーザーを削除する
@@ -68,8 +70,7 @@ class LineMessagingService
       $data = $this->atherMessage($event);
     }
     $response = Http::withToken($channelAccessToken)
-    ->post('https://api.line.me/v2/bot/message/reply', $data);
-
+      ->post('https://api.line.me/v2/bot/message/reply', $data);
   }
 
   // イベント選択時 カルーセルVer
@@ -86,16 +87,16 @@ class LineMessagingService
             ->whereColumn('event_users.event_id', 'events.id')
             ->where('event_users.user_id', $user->id);
         })->get();
-      if (!$eventList) {
-        return json_encode([
+      if (count($eventList) === 0) {
+        return [
           'replyToken' => "{$event['replyToken']}",
           'messages' => [
             [
               'type' => 'text',
-              'text' => '開催予定のイベントはありません。',
+              'text' => '予約可能なイベントはありません。',
             ]
           ]
-        ]);
+        ];
       }
       $mode = 'reserve';
     } elseif ($text === 'キャンセル' || $text === '予約確認') {
@@ -165,7 +166,7 @@ class LineMessagingService
   {
     $data = explode('&', $event['postback']['data']);
 
-    if(strpos($data[0], 'richmenu-changed') !== false) {
+    if (strpos($data[0], 'richmenu-changed') !== false) {
       return;
     }
     // 文字列から連想配列を作成
@@ -318,16 +319,15 @@ class LineMessagingService
 
     // // 完了メッセージ送信
     $response = Http::withToken($channelAccessToken)
-    ->post('https://api.line.me/v2/bot/message/reply', [
+      ->post('https://api.line.me/v2/bot/message/reply', [
         'replyToken' => "{$event['replyToken']}",
         'messages' => [
-        [
-          'type' => 'text',
-          'text' => $text,
+          [
+            'type' => 'text',
+            'text' => $text,
+          ]
         ]
-      ]
-    ]);
-
+      ]);
   }
 
   private function eventDetail($event, $channelAccessToken, $data)
@@ -427,8 +427,7 @@ class LineMessagingService
     }
 
     $response = Http::withToken($channelAccessToken)
-    ->post('https://api.line.me/v2/bot/message/reply', $body);
-
+      ->post('https://api.line.me/v2/bot/message/reply', $body);
   }
 
   private function eventReserveOrCancel($event, $channelAccessToken, $data)
@@ -450,34 +449,48 @@ class LineMessagingService
     } else {
       if ($data['action'] === 'reserve') {
 
-        Log::debug('予約開始前');
-
-
-        // $request = new Request([], [
-        //   'event_id' => $eventInfo->id,
-        //   'event_user_id' => $user->id,
-        //   'remark' => '',
-        //   'companions' => [],
-        // ]);
+        // 同伴選択の場合
+        if ($data['douhan'] === 'yes' && !isset($data['num'])) {
+          $this->addDouhan($event, $channelAccessToken, $data['id']);
+          return;
+        }
+        // コントローラーを呼び出して予約を行う
+        $companion = [];
+        if ($data['douhan'] === 'yes' && isset($data['num'])) {
+          $num = (int)$data['num'];
+          $companion = [];
+          for ($i = 1; $i <= $num; $i++) {
+            $companion[] =
+              [
+                'category' => $user->user_category_id,
+                'gender' => $user->gender,
+                'name' => "同伴{$i}({$user->name})"
+              ];
+          }
+        }
         $request = Request::create("/", "POST", [
           'event_id' => $eventInfo->id,
           'user_id' => $user->id,
           'remark' => '',
-          'companions' => [],
+          'companions' => $companion,
         ]);
-        $request->setUserResolver(function() use ($user) {
+        $request->setUserResolver(function () use ($user) {
           return $user;
         });
-        Log::debug('request', [$request]);
 
         $controller = app()->make('App\Http\Controllers\EventUserController');
-        $controller->create($request);
+        $response = $controller->create($request);
 
-        $text = view('line.message.reserve', 
-        [
-          'event' => $eventInfo,
-        ]
-        )->render();
+        if($response->status() === 200) {
+            $text = view(
+              'line.message.reserve',
+              [
+                'event' => $eventInfo,
+              ]
+            )->render();
+        } else {
+          $text = $response->content();
+        }
 
         // // 予約の場合
         // $result = $detailDao->existsCheck($gameInfo['id'], '', $user['line_id']);
@@ -520,13 +533,7 @@ class LineMessagingService
       }
     }
     // 完了メッセージ送信
-    $url = 'https://api.line.me/v2/bot/message/reply'; // リプライ
-    $ch = curl_init($url);
-    $headers = array(
-      "Content-Type: application/json",
-      "Authorization: Bearer {$channelAccessToken}"
-    );
-    $data = json_encode([
+    $data = [
       'replyToken' => "{$event['replyToken']}",
       'messages' => [
         [
@@ -534,14 +541,60 @@ class LineMessagingService
           'text' => $text,
         ]
       ]
-    ]);
-    curl_setopt($ch, CURLOPT_POST, TRUE);  //POSTで送信
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, ($data)); //データをセット
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
+    ];
 
-    curl_exec($ch);
-    curl_close($ch);
+    Http::withToken($channelAccessToken)
+      ->post('https://api.line.me/v2/bot/message/reply', $data);
+  }
+
+  private function addDouhan($event, $channelAccessToken, $id)
+  {
+
+    $body = [
+      'replyToken' => "{$event['replyToken']}",
+      'messages' =>
+      [
+        [
+          "type" => "template",
+          "altText" => "同伴者選択",
+          "template" =>
+          [
+            "type" => "buttons",
+            "text" => "同伴者の人数を選択してください。",
+            "actions" =>
+            [
+              [
+                'type' => 'postback',
+                'label' => '1人',
+                'data' => "action=reserve&id={$id}&douhan=yes&num=1",
+                'displayText' => '1人'
+              ],
+              [
+                'type' => 'postback',
+                'label' => '2人',
+                'data' => "action=reserve&id={$id}&douhan=yes&num=2",
+                'displayText' => '2人'
+              ],
+              [
+                'type' => 'postback',
+                'label' => '3人',
+                'data' => "action=reserve&id={$id}&douhan=yes&num=3",
+                'displayText' => '3人'
+              ],
+              [
+                'type' => 'postback',
+                'label' => '追加しない',
+                'data' => "action=reserve&id={$id}&douhan=yes&num=7",
+                'displayText' => '追加しない'
+              ],
+            ]
+          ]
+        ]
+      ]
+    ];
+
+    Http::withToken($channelAccessToken)
+      ->post('https://api.line.me/v2/bot/message/reply', $body);
   }
 
 
