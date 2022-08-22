@@ -37,7 +37,7 @@ class TemplateTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/templateManagement')
-                    ->pause(1000)
+                    ->waitForText('社会人')
                     ->assertSee('社会人');
         });
     }
@@ -68,7 +68,7 @@ class TemplateTest extends DuskTestCase
                     ->append('#place', '沖縄県沖縄市')
                     ->append('#limit-number', '30')
                     ->append('#description', '詳細サンプル')
-                    ->pause(1000)
+                    ->waitForText('社会人')
                     ->append('#user-category1', '500')
                     ->append('#user-category2', '400')
                     ->append('#user-category3', '300')
@@ -81,7 +81,20 @@ class TemplateTest extends DuskTestCase
         });
   
         $this->changeDBHOSTtoIP();
-        $this->assertDatabaseCount('event_templates', 1);
+        // $this->assertDatabaseCount('event_templates', 1);
+        $this->assertDatabaseHas('event_templates', [
+          'template_name' =>  'テスト-テンプレート名',
+          'title' => 'テスト-イベント名',
+          'short_title' => 'テスト-イベント略称',
+          'place' => '沖縄県沖縄市',
+          'limit_number' => '30',
+          'description' => '詳細サンプル',
+          'price1' => 500,
+          'price2' => 400,
+          'price3' => 300,
+          'price4' => 200,
+          'price5' => 100,
+        ]);
 
     }
 }
