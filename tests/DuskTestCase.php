@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\Browser;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserCategory;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -115,9 +116,6 @@ abstract class DuskTestCase extends BaseTestCase
 
       $this->changeDBHOSTtoIP();
 
-      // User::destroy(User::all()->pluck('id'));
-      // DB::table('users')->delete();
-
       $user = User::factory()->create([
         'email' => 'super@test.com',
         'password' => Hash::make('password'),
@@ -136,5 +134,33 @@ abstract class DuskTestCase extends BaseTestCase
           ->pause(1500);
       });
 
+    }
+
+    protected function createCategory()
+    {
+      $categories = UserCategory::all();
+      $categories->each(function($category) {
+        $category->forceDelete();
+      });
+
+      UserCategory::create([
+        'category_name' => '社会人',
+      ]);
+
+      UserCategory::create([
+        'category_name' => '大学生',
+      ]);
+
+      UserCategory::create([
+        'category_name' => '高校生',
+      ]);
+
+      UserCategory::create([
+        'category_name' => '中学生',
+      ]);
+
+      UserCategory::create([
+        'category_name' => '小学生',
+      ]);
     }
 }

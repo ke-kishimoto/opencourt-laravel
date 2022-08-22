@@ -19,27 +19,45 @@ class TemplateTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/templateManagement')
-                    ->assertSee('テンプレート管理');
+                    ->assertSee('テンプレート管理')
+                    ;
         });
     }
 
     /**
-     * 
+     * @return void
+     */
+    public function testDisplayCategory()
+    {
+        $this->changeDBHOSTtoIP();
+
+        $this->login();
+
+        $this->createCategory();
+
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/templateManagement')
+                    ->pause(1000)
+                    ->assertSee('社会人');
+        });
+    }
+
+    /**
+     * create
      */
     public function testCreate()
     {
       $this->changeDBHOSTtoIP();
-
-      DB::beginTransaction();
-
-      try {
+      
         $templates = EventTemplate::all();
         $templates->each(function($template) {
           $template->forceDelete();
         });
-    
+        
         $this->login();
-  
+        
+        $this->createCategory();
+
         $this->changeDBHOSTtoMySQL();
   
         $this->browse(function (Browser $browser) {
@@ -50,22 +68,20 @@ class TemplateTest extends DuskTestCase
                     ->append('#place', '沖縄県沖縄市')
                     ->append('#limit-number', '30')
                     ->append('#description', '詳細サンプル')
+                    ->pause(1000)
+                    ->append('#user-category1', '500')
+                    ->append('#user-category2', '400')
+                    ->append('#user-category3', '300')
+                    ->append('#user-category4', '200')
+                    ->append('#user-category5', '100')
                     ->press('#register-btn')
                     ->press('#register-ok')
                     ->waitForText('登録完了しました。')
-                    ->pause(1000);
+                    ;
         });
   
         $this->changeDBHOSTtoIP();
-  
         $this->assertDatabaseCount('event_templates', 1);
-        DB::rollBack();
-      } catch (\Exception $e) {
-        DB::rollBack();
-      }
-
-
-      
 
     }
 }
