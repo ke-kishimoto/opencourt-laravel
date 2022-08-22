@@ -9,6 +9,7 @@ use Laravel\Dusk\TestCase as BaseTestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\Browser;
+use Illuminate\Support\Facades\DB;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -114,7 +115,8 @@ abstract class DuskTestCase extends BaseTestCase
 
       $this->changeDBHOSTtoIP();
 
-      User::destroy(User::all()->pluck('id'));
+      // User::destroy(User::all()->pluck('id'));
+      // DB::table('users')->delete();
 
       $user = User::factory()->create([
         'email' => 'super@test.com',
@@ -131,7 +133,7 @@ abstract class DuskTestCase extends BaseTestCase
           ->append('#email', 'super@test.com')
           ->append('#password', 'password')
           ->press('#login')
-          ->waitForLocation('/');
+          ->pause(1500);
       });
 
     }

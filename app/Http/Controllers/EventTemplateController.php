@@ -28,7 +28,7 @@ class EventTemplateController extends Controller
     public function create(Request $request)
     {
         Log::debug($request);
-        if($request->isNew) {
+        if($request->isNew || !$request->has('id')) {
             $eventTemplate = new EventTemplate();
         } else {
             $eventTemplate = EventTemplate::find($request->id);
