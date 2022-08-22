@@ -6,6 +6,9 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk\TestCase as BaseTestCase;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Dusk\Browser;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -37,6 +40,7 @@ abstract class DuskTestCase extends BaseTestCase
             return $items->merge([
                 '--disable-gpu',
                 '--headless',
+                '--no-sandbox', //追記
             ]);
         })->all());
 
@@ -68,5 +72,67 @@ abstract class DuskTestCase extends BaseTestCase
     {
         return isset($_SERVER['DUSK_START_MAXIMIZED']) ||
                isset($_ENV['DUSK_START_MAXIMIZED']);
+    }
+
+    /**
+     * Change .env DB_HOST to mysql
+     */
+    protected function changeDBHOSTtoMySQL()
+    {
+        $path = base_path('.env');
+
+        if (file_exists($path)) {
+          file_put_contents($path, str_replace(
+            'DB_HOST=127.0.0.1',
+            'DB_HOST=mysql',
+              file_get_contents($path)
+          ));
+        }
+    }
+
+    /**
+     * Change .env DB_HOST to IP Address
+     */
+    protected function changeDBHOSTtoIP()
+    {
+        $path = base_path('.env');
+
+        if (file_exists($path)) {
+          file_put_contents($path, str_replace(
+            'DB_HOST=' . 'mysql',
+            'DB_HOST=' . '127.0.0.1',
+              file_get_contents($path)
+          ));
+        }
+    }
+
+    /**
+     * Login
+     */
+    protected function login()
+    {
+
+      $this->changeDBHOSTtoIP();
+
+      User::destroy(User::all()->pluck('id'));
+
+      $user = User::factory()->create([
+        'email' => 'super@test.com',
+        'password' => Hash::make('password'),
+      ]);
+
+      $user->save();
+
+      $this->changeDBHOSTtoMySQL();
+
+      $this->browse(function (Browser $browser) {
+        $browser->visit('/login')
+          // valueで値をセットすると、Reactでstateにうまく反映されない
+          ->append('#email', 'super@test.com')
+          ->append('#password', 'password')
+          ->press('#login')
+          ->waitForLocation('/');
+      });
+
     }
 }
