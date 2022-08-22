@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Dusk\Browser;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserCategory;
+use App\Models\EventTemplate;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -162,5 +163,20 @@ abstract class DuskTestCase extends BaseTestCase
       UserCategory::create([
         'category_name' => '小学生',
       ]);
+    }
+
+    protected function createTemplate()
+    {
+      $templates = EventTemplate::all();
+      
+      $templates = EventTemplate::all();
+      $templates->each(function($template) {
+        $template->forceDelete();
+      });
+
+      EventTemplate::factory()->create([]);
+      EventTemplate::factory()->create([]);
+      EventTemplate::factory()->create([]);
+      
     }
 }
