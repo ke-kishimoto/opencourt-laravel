@@ -28,10 +28,7 @@ class LoginTest extends DuskTestCase
 
     $this->changeDBHOSTtoIP();
 
-    DB::beginTransaction();
-
-    // User::destroy(User::all()->pluck('id'));
-    DB::table('users')->delete();
+    User::truncate();
 
     $user = User::factory()->create([
       'email' => 'super@test.com',
@@ -53,8 +50,6 @@ class LoginTest extends DuskTestCase
     });
 
     $this->changeDBHOSTtoIP();
-
-    DB::rollback();
 
   }
 

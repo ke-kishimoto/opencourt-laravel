@@ -128,7 +128,6 @@ abstract class DuskTestCase extends BaseTestCase
 
       $this->browse(function (Browser $browser) {
         $browser->visit('/login')
-          // valueで値をセットすると、Reactでstateにうまく反映されない
           ->append('#email', 'super@test.com')
           ->append('#password', 'password')
           ->press('#login')
@@ -137,46 +136,4 @@ abstract class DuskTestCase extends BaseTestCase
 
     }
 
-    protected function createCategory()
-    {
-      $categories = UserCategory::all();
-      $categories->each(function($category) {
-        $category->forceDelete();
-      });
-
-      UserCategory::create([
-        'category_name' => '社会人',
-      ]);
-
-      UserCategory::create([
-        'category_name' => '大学生',
-      ]);
-
-      UserCategory::create([
-        'category_name' => '高校生',
-      ]);
-
-      UserCategory::create([
-        'category_name' => '中学生',
-      ]);
-
-      UserCategory::create([
-        'category_name' => '小学生',
-      ]);
-    }
-
-    protected function createTemplate()
-    {
-      $templates = EventTemplate::all();
-      
-      $templates = EventTemplate::all();
-      $templates->each(function($template) {
-        $template->forceDelete();
-      });
-
-      EventTemplate::factory()->create([]);
-      EventTemplate::factory()->create([]);
-      EventTemplate::factory()->create([]);
-      
-    }
 }

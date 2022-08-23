@@ -7,6 +7,7 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Illuminate\Support\Facades\DB;
 use App\Models\EventTemplate;
+use Tests\DBTestUtil;
 
 class TemplateTest extends DuskTestCase
 {
@@ -33,7 +34,7 @@ class TemplateTest extends DuskTestCase
 
         $this->login();
 
-        $this->createCategory();
+        DBTestUtil::createCategory();
 
         $this->browse(function (Browser $browser) {
             $browser->visit('/templateManagement')
@@ -56,11 +57,12 @@ class TemplateTest extends DuskTestCase
         
         $this->login();
         
-        $this->createCategory();
+        DBTestUtil::createCategory();
 
         $this->changeDBHOSTtoMySQL();
   
         $this->browse(function (Browser $browser) {
+          $browser->waitForReload(function (Browser $browser) {
             $browser->visit('/templateManagement')
                     ->append('#template-name', 'テスト-テンプレート名')
                     ->append('#event-name', 'テスト-イベント名')
@@ -78,23 +80,18 @@ class TemplateTest extends DuskTestCase
                     ->press('#register-ok')
                     ->waitForText('登録完了しました。')
                     ;
+          })->select('#template-select', 'テスト-テンプレート名')
+          ->assertValue('#event-name', 'テスト-イベント名')
+          ->assertValue('#event-short-name', 'テスト-イベント略称')
+          ->assertValue('#place', '沖縄県沖縄市')
+          ->assertValue('#limit-number', '30')
+          ->assertValue('#description', '詳細サンプル')
+          ->assertValue('#user-category1', '500')
+          ->assertValue('#user-category2', '400')
+          ->assertValue('#user-category3', '300')
+          ->assertValue('#user-category4', '200')
+          ->assertValue('#user-category5', '100')
+          ;
         });
-  
-        $this->changeDBHOSTtoIP();
-        // $this->assertDatabaseCount('event_templates', 1);
-        $this->assertDatabaseHas('event_templates', [
-          'template_name' =>  'テスト-テンプレート名',
-          'title' => 'テスト-イベント名',
-          'short_title' => 'テスト-イベント略称',
-          'place' => '沖縄県沖縄市',
-          'limit_number' => '30',
-          'description' => '詳細サンプル',
-          'price1' => 500,
-          'price2' => 400,
-          'price3' => 300,
-          'price4' => 200,
-          'price5' => 100,
-        ]);
-
     }
 }
