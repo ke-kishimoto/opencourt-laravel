@@ -12,48 +12,13 @@ use Tests\DBTestUtil;
 class TemplateTest extends DuskTestCase
 {
     /**
-     * @return void
-     */
-    public function testDisplay()
-    {
-        $this->login();
-
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/templateManagement')
-                    ->assertSee('テンプレート管理')
-                    ;
-        });
-    }
-
-    /**
-     * @return void
-     */
-    public function testDisplayCategory()
-    {
-        $this->changeDBHOSTtoIP();
-
-        $this->login();
-
-        DBTestUtil::createCategory();
-
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/templateManagement')
-                    ->waitForText('社会人')
-                    ->assertSee('社会人');
-        });
-    }
-
-    /**
      * create
      */
     public function testCreate()
     {
-      $this->changeDBHOSTtoIP();
+        $this->changeDBHOSTtoIP();
       
-        $templates = EventTemplate::all();
-        $templates->each(function($template) {
-          $template->forceDelete();
-        });
+        EventTemplate::truncate();
         
         $this->login();
         
@@ -62,15 +27,14 @@ class TemplateTest extends DuskTestCase
         $this->changeDBHOSTtoMySQL();
   
         $this->browse(function (Browser $browser) {
-          $browser->waitForReload(function (Browser $browser) {
-            $browser->visit('/templateManagement')
+            $browser->visit('/newEventtemplate')
+                    ->waitForText('社会人')
                     ->append('#template-name', 'テスト-テンプレート名')
                     ->append('#event-name', 'テスト-イベント名')
                     ->append('#event-short-name', 'テスト-イベント略称')
                     ->append('#place', '沖縄県沖縄市')
                     ->append('#limit-number', '30')
                     ->append('#description', '詳細サンプル')
-                    ->waitForText('社会人')
                     ->append('#user-category1', '500')
                     ->append('#user-category2', '400')
                     ->append('#user-category3', '300')
@@ -78,20 +42,19 @@ class TemplateTest extends DuskTestCase
                     ->append('#user-category5', '100')
                     ->press('#register-btn')
                     ->press('#register-ok')
-                    ->waitForText('登録完了しました。')
-                    ;
-          })->select('#template-select', 'テスト-テンプレート名')
-          ->assertValue('#event-name', 'テスト-イベント名')
-          ->assertValue('#event-short-name', 'テスト-イベント略称')
-          ->assertValue('#place', '沖縄県沖縄市')
-          ->assertValue('#limit-number', '30')
-          ->assertValue('#description', '詳細サンプル')
-          ->assertValue('#user-category1', '500')
-          ->assertValue('#user-category2', '400')
-          ->assertValue('#user-category3', '300')
-          ->assertValue('#user-category4', '200')
-          ->assertValue('#user-category5', '100')
-          ;
+                    ->pause(1000)
+                    ->assertPathIs('/templateManagement')
+                    ->visit('/eventTemplate/1')
+                    ->assertValue('#event-name', 'テスト-イベント名')
+                    ->assertValue('#event-short-name', 'テスト-イベント略称')
+                    ->assertValue('#place', '沖縄県沖縄市')
+                    ->assertValue('#limit-number', '30')
+                    ->assertValue('#description', '詳細サンプル')
+                    ->assertValue('#user-category1', '500')
+                    ->assertValue('#user-category2', '400')
+                    ->assertValue('#user-category3', '300')
+                    ->assertValue('#user-category4', '200')
+                    ->assertValue('#user-category5', '100');
         });
     }
 }
