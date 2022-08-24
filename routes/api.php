@@ -26,8 +26,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/logout', [LoginLogoutController::class, 'logout']);
 
   // イベントテンプレート
+  Route::get('/getAlleventTemplate', [EventTemplateController::class, 'all']);
   Route::post('/eventTemplate', [EventTemplateController::class, 'create']);
-  Route::put('/eventTemplate', [EventTemplateController::class, 'create']);
+  Route::put('/eventTemplate', [EventTemplateController::class, 'update']);
   Route::get('/getTemplateList', [EventTemplateController::class, 'getList']);
   Route::get('/getTemplate/{id}', [EventTemplateController::class, 'get']);
   Route::delete('/eventTemplate/{id}', [EventTemplateController::class, 'delete']);
