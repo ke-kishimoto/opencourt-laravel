@@ -40,10 +40,10 @@ class EventTemplateController extends Controller
           'limit_number' => $request->limit_number,
           'description' => $request->description,
           'price1' => $request->price1,
-          'price2' => $request->price1,
-          'price3' => $request->price2,
-          'price4' => $request->price3,
-          'price5' => $request->price4,
+          'price2' => $request->price2,
+          'price3' => $request->price3,
+          'price4' => $request->price4,
+          'price5' => $request->price5,
         ]);
 
         return response($eventTemplate, 200);
