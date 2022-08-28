@@ -122,5 +122,33 @@ class TemplateTest extends DuskTestCase
       });
     }
 
+    /**
+     * delete
+     */
+    public function testDelete()
+    {
+      $this->changeDBHOSTtoIP();
+          
+      EventTemplate::truncate();
+      
+      $this->login();
+      
+      DBTestUtil::createCategory();
+      DBTestUtil::createTemplate();
+  
+      $this->changeDBHOSTtoMySQL();
+
+      $this->browse(function (Browser $browser) {
+        $browser->visit('/eventTemplate/1')
+        ->press('#delete-btn')
+        ->press('#register-ok')
+        ->pause(1000)
+        ->visit('/eventTemplate/1')
+        ->pause(1000)
+        ->assertPathIs('/error');
+      });
+
+    }
+
 
 }
