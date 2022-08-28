@@ -24,10 +24,10 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-          'name' => ['required'],
+          'name1' => ['required'],
           'email' => ['required', 'email', 'unique:users'],
           'category1' => ['required'],
-          'gender' => ['required'],
+          'gender1' => ['required'],
           'password' => ['required'],
        ]);
         if($request->password !== $request->rePassword) {
@@ -45,6 +45,19 @@ class UserController extends Controller
             'description' => $request->description,
         ]);
         return response($user, 200);
+    }
+
+    public function update(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->name = $request->name;
+        $user->gender = $request->gender1;
+        $user->user_category_id = $request->category1;
+        $user->description = $request->description;
+
+        $user->save();
+        return response($user, 200);
+
     }
 
     public function delete($id)

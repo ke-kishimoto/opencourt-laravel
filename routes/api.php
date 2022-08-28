@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::delete('/user/{id}', [UserController::class, 'delete']);
   Route::put('/role', [UserController::class, 'updateRole']);
   Route::put('/status', [UserController::class, 'updateStatus']);
+  Route::put('/user', [UserController::class, 'update']);
   
   // イベント
   Route::get('/event/{id}', [EventController::class, 'get']);
