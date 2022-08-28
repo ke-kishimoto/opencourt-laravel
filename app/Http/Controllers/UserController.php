@@ -62,27 +62,12 @@ class UserController extends Controller
       return response($user, 200);
     }
 
-    // public function updateBlacklist($id)
-    // {
-    //     $user = User::find($id);
-    //     if($user->status === 1) {
-    //         $user->status = 2;
-    //     } else if ($user->status === 2) {
-    //         $user->status = 1;
-    //     }
-    //     $user->save();
-    //     return response($user, 200);
-    // }
+    public function updateStatus(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->status = $request->status;
+        $user->save();
+        return response($user, 200);
+    }
 
-    // public function updateAuthority($id)
-    // {
-    //     $user = User::find($id);
-    //     if($user->role_level === 2) {
-    //         $user->role_level = 3;
-    //     } else if ($user->role_level === 3) {
-    //         $user->role_level = 2;
-    //     }
-    //     $user->save();
-    //     return response($user, 200);
-    // }
 }
