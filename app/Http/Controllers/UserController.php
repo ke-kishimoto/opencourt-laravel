@@ -23,44 +23,58 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        $validated = $request->validate([
+          'name' => ['required'],
+          'email' => ['required', 'email', 'unique:users'],
+          'category1' => ['required'],
+          'gender' => ['required'],
+          'password' => ['required'],
+       ]);
         if($request->password !== $request->rePassword) {
-            return view('userRegist', ['title' => 'メンバー登録']);
+            return response([], 400);
         }
-        User::create([
-            'role_level' => $request->role_level,
-            'user_category_id' => $request->user_category_id,
-            'gender' => $request->gender,
-            'name' => $request->name,
-            'status' => 1,
+        $roleLevel = 'general';
+        $user = User::create([
+            'role_level' => $roleLevel,
+            'user_category_id' => $request->category1,
+            'gender' => $request->gender1,
+            'name' => $request->name1,
+            'status' => 'active',
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'remark' => $request->remark,
+            'description' => $request->description,
         ]);
-        return view('userList', ['title' => 'メンバー管理']);
-
-    }
-
-    public function updateBlacklist($id)
-    {
-        $user = User::find($id);
-        if($user->status === 1) {
-            $user->status = 2;
-        } else if ($user->status === 2) {
-            $user->status = 1;
-        }
-        $user->save();
         return response($user, 200);
     }
 
-    public function updateAuthority($id)
+    public function delete($id)
     {
-        $user = User::find($id);
-        if($user->role_level === 2) {
-            $user->role_level = 3;
-        } else if ($user->role_level === 3) {
-            $user->role_level = 2;
-        }
-        $user->save();
-        return response($user, 200);
+      $user = User::find($id);
+      $user->delete();
+      return response([], 200);
     }
+
+    // public function updateBlacklist($id)
+    // {
+    //     $user = User::find($id);
+    //     if($user->status === 1) {
+    //         $user->status = 2;
+    //     } else if ($user->status === 2) {
+    //         $user->status = 1;
+    //     }
+    //     $user->save();
+    //     return response($user, 200);
+    // }
+
+    // public function updateAuthority($id)
+    // {
+    //     $user = User::find($id);
+    //     if($user->role_level === 2) {
+    //         $user->role_level = 3;
+    //     } else if ($user->role_level === 3) {
+    //         $user->role_level = 2;
+    //     }
+    //     $user->save();
+    //     return response($user, 200);
+    // }
 }

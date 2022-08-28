@@ -45,7 +45,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   // ユーザー
   Route::get('/getUserList', [UserController::class, 'getUserList']);
   Route::get('/user/{id}', [UserController::class, 'get']);
-
+  Route::delete('/user/{id}', [UserController::class, 'delete']);
+  
   // イベント
   Route::get('/event/{id}', [EventController::class, 'get']);
   Route::post('/event', [EventController::class, 'create']);
@@ -70,3 +71,4 @@ Route::post('login', [LoginLogoutController::class, 'login']);
 Route::post('lineLogin/{code}', [LoginLogoutController::class, 'lineLogin']);
 Route::post('webhook', [LineController::class, 'webhook']);
 Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
+Route::post('/user', [UserController::class, 'create']);

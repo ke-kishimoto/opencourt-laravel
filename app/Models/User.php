@@ -88,6 +88,7 @@ class User extends Authenticatable2 implements Authenticatable
         'user_category_id',
         'user_name',
         'name',
+        'email',
         'tel',
         'password',
         'gender',
