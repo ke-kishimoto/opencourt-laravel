@@ -54,6 +54,14 @@ class UserController extends Controller
       return response([], 200);
     }
 
+    public function updateRole(Request $request)
+    {
+      $user = User::find($request->id);
+      $user->role_level = $request->role_level;
+      $user->save();
+      return response($user, 200);
+    }
+
     // public function updateBlacklist($id)
     // {
     //     $user = User::find($id);
