@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\EventUser;
 use App\Models\EventUserCompanion;
+use App\Models\User;
 use App\Services\LineNotifyService;
 
 class EventUserController extends Controller
@@ -97,11 +98,15 @@ class EventUserController extends Controller
     }
 
     // 参加のキャンセル
-    public function delete(Request $request, $eventId)
+    public function delete(Request $request, $id)
     {
-      $eventUser = EventUser::where('event_id', $eventId)
-      ->where('user_id', $request->user()->id)
-      ->first();
+      if($id != 0) {
+        $eventUser = EventUser::find($id);
+      } else {
+        $eventUser = EventUser::where('event_id', $request->event_id)
+        ->where('user_id', $request->user_id)
+        ->first();
+      }
 
       DB::transaction(function () use ($eventUser) {
         // 同伴者キャンセル
@@ -112,9 +117,10 @@ class EventUserController extends Controller
       });
 
       // LINE通知
+      $user = User::find($eventUser->user_id);
       $this->lineNotifyService->cancel(
-        $eventId, 
-        $request->user());
+        $eventUser->event_id, 
+        $user);
 
       return response([], 200);
 

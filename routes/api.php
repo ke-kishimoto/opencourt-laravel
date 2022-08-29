@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   // イベント参加者
   Route::get('/getEventUser/{id}', [EventUserController::class, 'getEventUser']);
   Route::post('/eventUser', [EventUserController::class, 'create']);
-  Route::delete('/eventUser/{eventId}', [EventUserController::class, 'delete']);
+  Route::delete('/eventUser/{id}', [EventUserController::class, 'delete']);
   Route::get('getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
   Route::post('bulkResevation', [EventUserController::class, 'bulkResevation']);
   

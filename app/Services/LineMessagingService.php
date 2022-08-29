@@ -484,13 +484,16 @@ class LineMessagingService
 
       } elseif ($data['action'] === 'cancel') {
         // キャンセル
-        $request = Request::create("/", "DELETE", []);
+        $request = Request::create("/", "DELETE", [
+          'event_id' => $eventInfo->id,
+          'user_id' => $user->id,
+        ]);
         $request->setUserResolver(function () use ($user) {
           return $user;
         });
 
         $controller = app()->make('App\Http\Controllers\EventUserController');
-        $response = $controller->delete($request, $eventInfo->id);
+        $response = $controller->delete($request, 0);
         $text = view('line.message.cancel', ['event' => $eventInfo])->render();
 
       }
