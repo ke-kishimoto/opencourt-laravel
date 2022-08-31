@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   
   // 売上
   Route::put('eventUserSales', [SalesController::class, 'inputEventUserSales']);
+  Route::put('reflectEventDetail/{eventId}', [SalesController::class, 'reflectEventDetail']);
 
   // ニュース
   Route::post('/news', [NewsController::class, 'create']);
