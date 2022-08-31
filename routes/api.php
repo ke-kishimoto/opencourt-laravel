@@ -12,6 +12,7 @@ use App\Http\Controllers\EventUserController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
   Route::post('bulkResevation', [EventUserController::class, 'bulkResevation']);
   
+  // 売上
+  Route::put('eventUserSales', [SalesController::class, 'inputEventUserSales']);
+
   // ニュース
   Route::post('/news', [NewsController::class, 'create']);
   Route::get('/getAllNews', [NewsController::class, 'getAllNews']);
