@@ -12,4 +12,9 @@ class Config extends Model
     use SoftDeletes;
 
     protected $table = "configs";
+
+    protected $fillable = [
+        'line_notify_flag',
+        'waiting_status_auto_update_flag',
+    ];
 }

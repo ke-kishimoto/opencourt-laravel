@@ -7,26 +7,21 @@ use App\Models\Config;
 
 class ConfigController extends Controller
 {
-    /**
-     * @param int $id
-     */
-    public function show($id)
+    public function get()
     {
-        $config = Config::find($id);
-        return view('config', [
-            'title' => 'システム設定',
-            'config' => $config,
-            ]);
+      $config = Config::get()->first();
+      return response($config, 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $config = Config::find($id);
-        $config->system_title = $request->system_title;
-        $config->bg_color = $request->bg_color;
-        $config->waiting_flg_auto_update = $request->waiting_flg_auto_update;
+        $config = Config::get()->first();
+        if(!$config) {
+          $config = new Config();
+        }
+        $config->line_notify_flag = $request->line_notify_flag;
+        $config->waiting_status_auto_update_flag = $request->waiting_status_auto_update_flag;
         $config->save();
-        // return view('index', ['title' => 'カレンダー']);
-        return redirect()->route('index');
+        return response($config, 200);
     }
 }

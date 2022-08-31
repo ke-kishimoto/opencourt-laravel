@@ -11,6 +11,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventUserController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LineController;
+use App\Http\Controllers\ConfigController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,12 @@ use App\Http\Controllers\LineController;
 |
 */
 Route::group(['middleware' => ['auth:sanctum']], function () {
+  // ログアウト
   Route::post('/logout', [LoginLogoutController::class, 'logout']);
+
+  // コンフィグ
+  Route::get('config', [ConfigController::class, 'get']);
+  Route::post('config', [ConfigController::class, 'update']);
 
   // イベントテンプレート
   Route::get('/getAlleventTemplate', [EventTemplateController::class, 'all']);
