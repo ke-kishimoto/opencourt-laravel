@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::put('/eventUserSales', [SalesController::class, 'inputEventUserSales']);
   Route::put('/reflectEventDetail/{eventId}', [SalesController::class, 'reflectEventDetail']);
   Route::put('/monthlySales', [SalesController::class, 'inputMonthlySales']);
+  Route::get('/getMonthlySlaes/{year}', [SalesController::class, 'getMonthlySlaes']);
 
   // ニュース
   Route::post('/news', [NewsController::class, 'create']);
