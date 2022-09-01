@@ -31,19 +31,32 @@ class SalesController extends Controller
                   when attendance = 'attendance' then 1
                   else 0
                 end) as count_user
-            , sum(case
+            ,sum(case
                   when attendance = 'attendance' then ifnull(amount, 0)
                   else 0
                 end) as amount_total"
           )
         )->where('event_id', $eventId)
-        ->get();
+        ->first();
 
         $event = Event::find($eventId);
-        $event->number_of_user = $eventTotal->count_user;
-        $event->number_of_user = $eventTotal->amount;
+        $event->number_of_user = $eventTotal->count_user !== null ? $eventTotal->count_user : 0;
+        $event->amount = $eventTotal->amount_total !== null ? $eventTotal->amount_total : 0;
         $event->save();
 
         return response($event, 200);
+    }
+
+    public function inputMonthlySales(Request $request)
+    {
+        foreach($request->events as $event) {
+            $model = Event::find($event['id']);
+            $model->number_of_user = $event['number_of_user'];
+            $model->amount = $event['amount'];
+            $model->expenses = $event['expenses'];
+            $model->save();
+        }
+
+        return response([], 200);
     }
 }
