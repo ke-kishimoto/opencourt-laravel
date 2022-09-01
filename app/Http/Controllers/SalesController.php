@@ -60,11 +60,11 @@ class SalesController extends Controller
         return response([], 200);
     }
 
-    public function getMonthlySlaes($year)
+    public function getMonthlySales($year)
     {
       $sales = DB::table('events')
       ->select(DB::raw("date_format(event_date, '%m') month
-      , sum(ifnull(number_of_user, 0)) number_of_user
+      , sum(number_of_user) number_of_user
       , sum(amount) amount
       , sum(amount - expenses) profit
       "))
@@ -75,4 +75,21 @@ class SalesController extends Controller
 
       return response($sales, 200);
     }
+
+    public function getAllSales()
+    {
+      $sales = DB::table('events')
+      ->select(DB::raw("date_format(event_date, '%Y') year
+      , sum(number_of_user) number_of_user
+      , sum(amount) amount
+      , sum(amount - expenses) profit
+      "))
+      ->groupBy(DB::raw("date_format(event_date, '%Y')"))
+      ->orderBy(DB::raw("date_format(event_date, '%Y')"))
+      ->get();
+
+      return response($sales, 200);
+    }
+
+
 }
