@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginLogoutController;
 use App\Http\Controllers\EventTemplateController;
-use App\Http\Controllers\PrivacyPolicyController;
+use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\UserCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
@@ -41,9 +41,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::delete('/eventTemplate/{id}', [EventTemplateController::class, 'delete']);
 
   // プライバシーポリシー
-  Route::get('/privacyPolicy', [PrivacyPolicyController::class, 'get']);
-  Route::post('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
-  Route::put('/privacyPolicy', [PrivacyPolicyController::class, 'update']);
+  Route::get('/policy/{type}', [PolicyController::class, 'get']);
+  Route::post('/policy', [PolicyController::class, 'update']);
+  Route::put('/policy', [PolicyController::class, 'update']);
   
   // ユーザーカテゴリ
   Route::get('/userCategory', [UserCategoryController::class, 'all']);
