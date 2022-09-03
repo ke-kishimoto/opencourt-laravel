@@ -21,6 +21,7 @@ class ConfigController extends Controller
         }
         $config->line_notify_flag = $request->line_notify_flag;
         $config->waiting_status_auto_update_flag = $request->waiting_status_auto_update_flag;
+        $config->participant_border_number = $request->participant_border_number;
         $config->save();
         return response($config, 200);
     }

@@ -16,5 +16,6 @@ class Config extends Model
     protected $fillable = [
         'line_notify_flag',
         'waiting_status_auto_update_flag',
+        'participant_border_number',
     ];
 }
