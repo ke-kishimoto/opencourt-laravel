@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigsTable extends Migration
+class CreateEventViewView extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('line_notify_flag');
-            $table->string('waiting_status_auto_update_flag');
-            $table->integer('participant_border_number');
+        Schema::create('event_view', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +26,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('event_view');
     }
 }

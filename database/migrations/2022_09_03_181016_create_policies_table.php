@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConfigsTable extends Migration
+class CreatePoliciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('configs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('line_notify_flag');
-            $table->string('waiting_status_auto_update_flag');
-            $table->integer('participant_border_number');
+        Schema::create('policies', function (Blueprint $table) {
+            $table->id();
+            $table->string('policy_type');
+            $table->string('content');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +28,6 @@ class CreateConfigsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('policies');
     }
 }
