@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Models\UserCategory;
+use App\Models\Config;
 use Illuminate\Support\Facades\Log;
 
 class LineNotifyService
@@ -12,6 +13,10 @@ class LineNotifyService
 
     public function reserve($eventId, $user, $eventUser, $companionCount)
     {
+      $config = Config::find(1);
+      if(($config) && $config->line_notify_flag = 'off') {
+        return;
+      }
       $event = Event::find($eventId);
       $category = UserCategory::find($user->user_category_id);
       $msg = view('line.notify.reserve', 
@@ -27,6 +32,10 @@ class LineNotifyService
 
     public function cancel($eventId, $user)
     {
+      $config = Config::find(1);
+      if(($config) && $config->line_notify_flag = 'off') {
+        return;
+      }
       $event = Event::find($eventId);
       $msg = view('line.notify.cancel', ['user' => $user, 'event' => $event,])
       ->render();
@@ -35,6 +44,10 @@ class LineNotifyService
 
     public function bulkReserve($userName, $count)
     {
+      $config = Config::find(1);
+      if(($config) && $config->line_notify_flag = 'off') {
+        return;
+      }
       $msg = view('line.notify.bulkReserve', ['userName' => $userName, 'count' => $count,])
       ->render();
       $this->lineNotify($msg);
