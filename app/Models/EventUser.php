@@ -23,6 +23,29 @@ class EventUser extends Model
       'amount_remark',
     ];
 
+    protected $appends = [
+      'status_name',
+      'color_status',
+    ];
+
+    public function getColorStatusAttribute()
+    {
+        if($this->user->status !== 'active') {
+          return $this->user->status;
+        }
+        return $this->status;
+    }
+
+    public function getStatusNameAttribute()
+    {
+      if($this->status === 'participation') {
+        return '参加';
+      } else if ($this->status === 'cancel_waiting') {
+        return 'キャンセル待ち';
+      }
+      return '';
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

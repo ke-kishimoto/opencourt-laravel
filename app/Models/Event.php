@@ -39,7 +39,7 @@ class Event extends Model
         $eventUser = EventUser::where('event_id', $this->attributes['id'])
         ->where('user_id', $user->id)->first();
         if($eventUser) {
-          return $eventUser->status === 'participation' ? 'participanted' : 'participanted_waiting';
+          return $eventUser->status;
         }
       }
       // キャンセル待ち
