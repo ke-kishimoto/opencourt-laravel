@@ -20,11 +20,17 @@ class Event extends Model
     protected $appends = [
       'day', 
       'status',
+      'user_count',
     ];
 
     public function getDayAttribute()
     {
       return substr($this->attributes['event_date'], 8,2);
+    }
+
+    public function getUserCountAttribute()
+    {
+      return count($this->eventUsers);
     }
 
     public function getStatusAttribute()
