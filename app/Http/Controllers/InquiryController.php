@@ -24,15 +24,15 @@ class InquiryController extends Controller
 
     public function create(Request $request)
     {
-        $news = Inquiry::create([
-          // 'event_id' => $request->event_id,
+        $inquiry = Inquiry::create([
+          'event_id' => $request->event_id,
           'user_id' => $request->user()->id,
           'title' => $request->title,
           'content' => $request->content,
           'status' => 'yet',
         ]);
 
-        return response($news, 200);
+        return response($inquiry, 200);
     }
 
     public function delete($id)

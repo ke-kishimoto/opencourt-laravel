@@ -13,6 +13,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\InquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::post('/news', [NewsController::class, 'create']);
   Route::get('/getAllNews', [NewsController::class, 'getAllNews']);
   Route::get('/getNewNews', [NewsController::class, 'getNewNews']);
+
+  // 問い合わせ
+  Route::post('/inquiry', [InquiryController::class, 'create']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
