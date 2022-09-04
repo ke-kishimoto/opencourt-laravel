@@ -168,8 +168,16 @@ class EventUserController extends Controller
     }
 
     // LINE通知対象者人数取得
-    public function getLinePushTargetUser()
+    public function getLinePushTargetUserCount($eventId)
     {
-        
+        $count = EventUser::where('event_id', $eventId)
+        ->whereExists(function ($query) {
+          $query->select(DB::raw(1))
+                ->from('users')
+                ->whereColumn('users.id', 'event_users.user_id')
+                ->whereNotNull('line_id');
+        })
+        ->count();
+        return response($count, 200);
     }
 }

@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/getEventListByUser/{userId}', [EventUserController::class, 'getEventListByUser']);
   Route::post('/bulkResevation', [EventUserController::class, 'bulkResevation']);
   Route::put('/changeEventUserStatus', [EventUserController::class, 'changeStatus']);
+  Route::get('/getLinePushTargetUserCount/{eventId}', [EventUserController::class, 'getLinePushTargetUserCount']);
   
   // 売上
   Route::put('/eventUserSales', [SalesController::class, 'inputEventUserSales']);
