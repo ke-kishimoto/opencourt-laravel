@@ -154,4 +154,22 @@ class EventUserController extends Controller
       return response([], 200);
 
     }
+
+    // ステータスの変更
+    public function changeStatus(Request $request)
+    {
+        $eventUser = EventUser::find($request->id);
+        if($eventUser->status === 'participation') {
+          $eventUser->status = 'cancel_waiting';
+        } else {
+          $eventUser->status = 'participation';
+        }
+        $eventUser->save();
+    }
+
+    // LINE通知対象者人数取得
+    public function getLinePushTargetUser()
+    {
+        
+    }
 }
