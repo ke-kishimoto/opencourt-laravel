@@ -53,6 +53,12 @@ class LineNotifyService
       $this->lineNotify($msg);
     }
 
+    public function inquiry($inquiry)
+    {
+      $msg = view('line.notify.inquiry', ['inquiry' => $inquiry])->render();
+      $this->lineNotify($msg);
+    }
+
     // LINE通知用のfunction
     private function lineNotify($message) 
     {

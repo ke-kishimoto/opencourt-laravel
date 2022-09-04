@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inquiry;
+use App\Services\LineNotifyService;
 
 class InquiryController extends Controller
 {
+    private $lineNotifyService;
+
+    public function __construct(LineNotifyService $lineNotify)
+    {
+        $this->lineNotifyService = $lineNotify;
+    }
+
     /**
      * @param int $id
      */
@@ -31,6 +39,8 @@ class InquiryController extends Controller
           'content' => $request->content,
           'status' => 'yet',
         ]);
+
+        $this->lineNotifyService->inquiry($inquiry);
 
         return response($inquiry, 200);
     }
