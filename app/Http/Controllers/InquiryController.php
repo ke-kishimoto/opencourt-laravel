@@ -20,7 +20,7 @@ class InquiryController extends Controller
      */
     public function get($id)
     {
-        $news = Inquiry::find($id);
+        $news = Inquiry::with('user')->with('event')->find($id);
         return response($news, 200);
     }
 
@@ -41,6 +41,19 @@ class InquiryController extends Controller
         ]);
 
         $this->lineNotifyService->inquiry($inquiry);
+
+        return response($inquiry, 200);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $inquiry = Inquiry::find($request->id);
+        if($inquiry->status === 'yet') {
+          $inquiry->status = 'done';
+        } else {
+          $inquiry->status = 'yet';
+        }
+        $inquiry->save();
 
         return response($inquiry, 200);
     }

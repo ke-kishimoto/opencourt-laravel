@@ -89,6 +89,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   // 問い合わせ
   Route::post('/inquiry', [InquiryController::class, 'create']);
   Route::get('/getInquiries', [InquiryController::class, 'all']);
+  Route::get('inquiry/{id}', [InquiryController::class, 'get']);
+  Route::put('updateInquiryStatus', [InquiryController::class, 'updateStatus']);
+  Route::delete('inquiry/{id}', [InquiryController::class, 'delete']);
 });
 
 Route::post('login', [LoginLogoutController::class, 'login']);
