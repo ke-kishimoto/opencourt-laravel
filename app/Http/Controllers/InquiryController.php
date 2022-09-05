@@ -24,9 +24,9 @@ class InquiryController extends Controller
         return response($news, 200);
     }
 
-    public function getAllInquiries()
+    public function all()
     {
-        $news = Inquiry::all();
+        $news = Inquiry::with('user')->with('event')->get();
         return response($news, 200);
     }
 
