@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Services\LineMessagingService;
+use App\Models\EventUser;
 
 class LineController extends Controller
 {
@@ -44,7 +46,7 @@ class LineController extends Controller
            
            // 友達追加された場合
            if(isset($event['type']) && $event['type'] === 'follow') {
-            $this->lineMessagingService->addFriend($event, env('LINE_MESSAGING_API_CHANNEL_ACCESS_TOKEN'));
+            $this->lineMessagingService->addFriend($event);
            }
 
            // 友達解除された場合
@@ -65,5 +67,20 @@ class LineController extends Controller
        }
 
       return response([], 200);
+   }
+
+   public function sendMessage(Request $request)
+   {
+      $targetUsers = EventUser::where('event_id', $request->event_id)
+      ->whereExists(function ($query) {
+        $query->select(DB::raw(1))
+              ->from('users')
+              ->whereColumn('users.id', 'event_users.user_id')
+              ->whereNotNull('line_id');
+      })
+      ->get();
+      foreach($targetUsers as $targetUser) {
+
+      }
    }
 }

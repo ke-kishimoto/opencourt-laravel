@@ -16,9 +16,27 @@ class LineMessagingService
 
   const CAROUSEL_NUM = 10; // カルーセルは最大10件らしい
 
+  // public function pushMessage()
+  // {
+  //     $url = 'https://api.line.me/v2/bot/message/push';
+
+  //     $data = json_encode([
+  //       'to' => "{$userId}",
+  //       'messages' => [
+  //           [
+  //               'type' => 'text',
+  //               'text' => "{$msg}"
+  //           ],
+  //       ]
+  //   ]);
+
+  // }
+
   // 友達追加された時の処理
-  public function addFriend($event, $channelAccessToken)
+  public function addFriend($event)
   {
+    $channelAccessToken = env('LINE_MESSAGING_API_CHANNEL_ACCESS_TOKEN');
+
     $user = User::where('line_id', ($event['source']['userId']))->first();
     if (!$user) {
       // ユーザーが存在しない場合は登録する
@@ -27,14 +45,6 @@ class LineMessagingService
       $user->line_id = $event['source']['userId'];
 
       // // プロフィール取得
-      // $url = "https://api.line.me/v2/bot/profile/{$event['source']['userId']}"; // リプライ
-      // $ch = curl_init($url);
-      // $headers = array(
-      //   "Authorization: Bearer {$channelAccessToken}"
-      // );
-      // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
-      // $result = json_decode(curl_exec($ch));
       $result = Http::withToken($channelAccessToken)
       ->get('https://api.line.me/v2/bot/message/reply');
       $user->name = isset($result['displayName']) ? $result['displayName'] : '';

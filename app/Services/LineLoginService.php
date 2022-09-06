@@ -149,7 +149,6 @@ class LineLoginService
         $headers = array(
             "Authorization: Bearer {$accessToken}"
         );
-        // var_dump($headers);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); //受け取ったデータを変数に
