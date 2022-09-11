@@ -12,7 +12,7 @@ class MailService
     {
         $mailService = new MailService();
         $subject = "【" . env('APP_NAME') ."】新規登録完了のお知らせ";
-        $message = view('mail.userRegist', $user)->render();
+        $message = view('mail.userRegist', ['user' => $user])->render();
         $mailService->sendMail($user, $subject, $message);
     }
 
