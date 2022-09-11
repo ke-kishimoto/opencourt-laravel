@@ -29,6 +29,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
   // ログアウト
   Route::post('/logout', [LoginLogoutController::class, 'logout']);
 
+  // パスワード変更
+  Route::post('/changePassword', [LoginLogoutController::class, 'changePassword']);
+
   // コンフィグ
   Route::get('config', [ConfigController::class, 'get']);
   Route::post('config', [ConfigController::class, 'update']);

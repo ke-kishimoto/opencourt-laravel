@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Services\LineLoginService;
 
@@ -53,8 +51,6 @@ class LoginLogoutController extends Controller
 
     public function lineLogin($code)
     {
-        Log::debug($code);
-
         // アクセストークン取得
         $response = $this->lineLoginService->getAccessToken($code);
         $accessToken = $response->access_token;
@@ -78,8 +74,23 @@ class LoginLogoutController extends Controller
     public function logout(Request $request)
     {
         // トークンの削除
-        Log::debug('user', [$request->user()]);
         $request->user()->tokens()->delete();
         // $request->user()->currentAccessToken()->delete();
+    }
+
+    public function changePassword(Request $request)
+    {
+        if(Hash::check($request->password, $request->user()->password)) {
+          if($request->newPassword === $request->rePassword) {
+            $user = User::find($request->user()->id);
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+            return response([], 200);
+          } else {
+            return response(['msg' => '入力したパスワードが異なります'], 400);
+          }
+        } else {
+          return response(['msg' => '現在のパスワードが異なります'], 400);
+        }
     }
 }
