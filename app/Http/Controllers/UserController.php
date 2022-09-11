@@ -6,9 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use App\Services\MailService;
 
 class UserController extends Controller
 {
+
+    private $mailService;
+
+    public function __construct(MailService $mailService)
+    {
+        $this->mailService = $mailService;
+    }
+
     public function getUserList(Request $request)
     {
         $keyword = $request->name ?? '';
@@ -23,6 +32,7 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        Log::debug($request);
         $validated = $request->validate([
           'name1' => ['required'],
           'email' => ['required', 'email', 'unique:users'],
@@ -44,6 +54,9 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'description' => $request->description,
         ]);
+
+        $this->mailService->createNewUser($user);
+
         return response($user, 200);
     }
 

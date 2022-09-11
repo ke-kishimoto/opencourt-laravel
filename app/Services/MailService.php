@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Log;
 
 class MailService
 {
-    public static function createNewUser(User $user)
+    public function createNewUser(User $user)
     {
         $mailService = new MailService();
         $subject = "【" . env('APP_NAME') ."】新規登録完了のお知らせ";
-        $message = "新規登録が完了しました。";
+        $message = view('mail.userRegist', $user)->render();
         $mailService->sendMail($user, $subject, $message);
     }
 
-    public static function passwordReset(User $user, $pass)
+    public function passwordReset(User $user, $pass)
     {
         $mailService = new MailService();
         $subject = "【" . env('APP_NAME') ."】パスワードリセットのお知らせ";
