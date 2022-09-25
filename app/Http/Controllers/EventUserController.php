@@ -9,15 +9,18 @@ use App\Models\EventUser;
 use App\Models\EventUserCompanion;
 use App\Models\User;
 use App\Services\LineNotifyService;
+use App\Services\MailService;
 
 class EventUserController extends Controller
 {
 
     private $lineNotifyService;
+    private $mailService;
 
-    public function __construct(LineNotifyService $lineNotify)
+    public function __construct(LineNotifyService $lineNotify, MailService $mailService)
     {
         $this->lineNotifyService = $lineNotify;
+        $this->mailService = $mailService;
     }
 
     public function getEventUser($id)
@@ -84,6 +87,8 @@ class EventUserController extends Controller
           ]);
           $companionCount++;
         }
+
+        $this->mailService->joinEventUser($request->user());
   
         // LINE通知
         $this->lineNotifyService->reserve(
@@ -115,6 +120,8 @@ class EventUserController extends Controller
         // ユーザーのキャンセル
         $eventUser->delete();
       });
+
+      $this->mailService->cancelEvent($request->user(), $request->event_id);
 
       // LINE通知
       $user = User::find($eventUser->user_id);

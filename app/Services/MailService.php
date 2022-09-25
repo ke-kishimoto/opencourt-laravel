@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Event;
 use SendGrid\Mail\Mail;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
@@ -10,9 +11,40 @@ class MailService
 {
     public function createNewUser(User $user)
     {
+        if($user->email === null) return;
         $mailService = new MailService();
         $subject = "【" . env('APP_NAME') ."】新規登録完了のお知らせ";
-        $message = view('mail.userRegist', ['user' => $user])->render();
+        $message = view('mail.userRegist',
+         [
+           'user' => $user,
+           'url' => env('APP_URL')
+         ])->render();
+        $mailService->sendMail($user, $subject, $message);
+    }
+
+    public function joinEventUser(User $user)
+    {
+        if($user->email === null) return;
+        $mailService = new MailService();
+        $subject = "【" . env('APP_NAME') ."】イベント参加登録完了のお知らせ";
+        $message = view('mail.eventJoin', [
+          'user' => $user,
+          'myPageUrl' => env('APP_URL') . '/mypage',
+          'lineUrl' => env('LINE_ADD_FRIEND_URL')
+        ])->render();
+        $mailService->sendMail($user, $subject, $message);
+    }
+
+    public function cancelEvent(User $user, $eventId)
+    {
+        if($user->email === null) return;
+        $event = Event::find($eventId);
+        $mailService = new MailService();
+        $subject = "【" . env('APP_NAME') ."】イベント参加キャンセルのお知らせ";
+        $message = view('mail.eventCancel', [
+          'user' => $user,
+          'event' => $event,
+        ])->render();
         $mailService->sendMail($user, $subject, $message);
     }
 
