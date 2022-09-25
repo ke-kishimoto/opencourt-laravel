@@ -30,8 +30,10 @@ class EventUser extends Model
 
     public function getColorStatusAttribute()
     {
-        if($this->user->status !== 'active') {
-          return $this->user->status;
+        if($this->user !== null) {
+          if($this->user->status !== 'active') {
+            return $this->user->status;
+          }
         }
         return $this->status;
     }
