@@ -101,5 +101,5 @@ Route::post('lineLogin/{code}', [LoginLogoutController::class, 'lineLogin']);
 Route::post('webhook', [LineController::class, 'webhook']);
 Route::get('/getEventByMonth/{year}/{month}', [EventController::class, 'getEventByMonth']);
 Route::post('/user', [UserController::class, 'create']);
-// ユーザーカテゴリ
 Route::get('/userCategory', [UserCategoryController::class, 'all']);
+Route::post('/forgot-password', [LoginLogoutController::class, 'forgotPassword']);

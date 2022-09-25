@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Services\LineLoginService;
-
+use Illuminate\Support\Facades\Password;
 
 class LoginLogoutController extends Controller
 {
@@ -92,5 +92,24 @@ class LoginLogoutController extends Controller
         } else {
           return response(['msg' => '現在のパスワードが異なります'], 400);
         }
+    }
+
+    public function forgotPassword(Request $request)
+    {
+      $request->validate(['email' => 'required|email']);
+
+      Log::debug('リセット');
+
+      $status = Password::sendResetLink(
+          $request->only('email')
+      );
+
+      $status === Password::RESET_LINK_SENT
+                  ? back()->with(['status' => __($status)])
+                  : back()->withErrors(['email' => __($status)]);
+      
+                  Log::debug($status);
+      
+      return $status;
     }
 }
